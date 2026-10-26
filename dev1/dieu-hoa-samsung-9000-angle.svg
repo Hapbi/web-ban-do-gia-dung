@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="Minh họa Điều Hòa Samsung 1 Chiều 9.000 BTU">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF4E6"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+ <linearGradient id="metal" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#FFFFFF"/><stop offset=".42" stop-color="#DDD3C6"/><stop offset=".75" stop-color="#F7FAFC"/><stop offset="1" stop-color="#C5D0D8"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#D8F0F7"/><stop offset=".5" stop-color="#6C91A9"/><stop offset="1" stop-color="#223947"/></linearGradient>
+ <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D6E1E8" stop-opacity="0"/><stop offset="1" stop-color="#A8BBC8" stop-opacity=".35"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#526779" flood-opacity=".19"/></filter>
+</defs>
+<rect width="800" height="800" rx="42" fill="url(#bg)"/>
+<circle cx="705" cy="104" r="126" fill="#FDE0B4" opacity=".44"/><circle cx="90" cy="610" r="155" fill="#FDE0B4" opacity=".22"/>
+<path d="M0 610Q200 560 410 626T800 600V800H0Z" fill="url(#floor)"/><path d="M60 678H740" stroke="#D0DCE4" stroke-width="2" opacity=".65"/>
+<g fill="#FFFFFF" opacity=".62"><circle cx="620" cy="430" r="4" fill="#B9672B" opacity="0.25"/><circle cx="638" cy="430" r="4" fill="#B9672B" opacity="0.35"/><circle cx="620" cy="448" r="4" fill="#B9672B" opacity="0.45"/><circle cx="638" cy="448" r="4" fill="#B9672B" opacity="0.55"/></g>
+<g transform="rotate(-4 400 410) translate(10 2)"><g filter="url(#shadow)"><rect x="160" y="255" width="480" height="154" rx="30" fill="url(#metal)" stroke="#B2C2CC" stroke-width="3"/><rect x="177" y="270" width="446" height="103" rx="20" fill="#FBFCFD"/><rect x="187" y="284" width="358" height="10" rx="5" fill="#E5EBF0"/><rect x="196" y="308" width="320" height="7" rx="3" fill="#D9E1E8"/><rect x="557" y="286" width="50" height="32" rx="6" fill="#263945"/><rect x="565" y="295" width="30" height="5" rx="2" fill="#B9672B"/><circle cx="581" cy="308" r="3" fill="#E5F2F3"/><path d="M178 377Q400 431 622 377" stroke="#A4B3BE" stroke-width="4" fill="none"/><path d="M280 433q-18 30 0 56M400 433q-18 30 0 56M520 433q-18 30 0 56" stroke="#B9672B" stroke-width="6" stroke-linecap="round" opacity=".55" fill="none"/></g></g>
+
+<g font-family="Arial, Helvetica, sans-serif"><rect x="35" y="34" width="139" height="34" rx="17" fill="#FFFFFF" fill-opacity=".85" stroke="#D7E2E8"/><text x="104" y="56" text-anchor="middle" font-size="14" fill="#3A4E5C" font-weight="700" letter-spacing="1.4">BTVH HOME</text><rect x="550" y="34" width="215" height="34" rx="17" fill="#FFFFFF" fill-opacity=".8" stroke="#D7E2E8"/><text x="657" y="56" text-anchor="middle" font-size="12" fill="#5E707C" font-weight="700" letter-spacing=".6">ẢNH MINH HỌA</text><rect x="35" y="728" width="730" height="1" fill="#D3DFE6"/><text x="36" y="760" font-size="13" fill="#5D717F" letter-spacing="1.2">GÓC NGHIÊNG</text><text x="764" y="760" text-anchor="end" font-size="13" fill="#B9672B" font-weight="700">BTVH • HOME &amp; LIVING</text></g>
+</svg>

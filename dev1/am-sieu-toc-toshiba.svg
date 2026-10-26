@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="Minh họa Ấm Siêu Tốc Toshiba 1.7L">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF0EA"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+ <linearGradient id="metal" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#FFFFFF"/><stop offset=".42" stop-color="#D8DDE1"/><stop offset=".75" stop-color="#F7FAFC"/><stop offset="1" stop-color="#C5D0D8"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#D8F0F7"/><stop offset=".5" stop-color="#6C91A9"/><stop offset="1" stop-color="#223947"/></linearGradient>
+ <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D6E1E8" stop-opacity="0"/><stop offset="1" stop-color="#A8BBC8" stop-opacity=".35"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#526779" flood-opacity=".19"/></filter>
+</defs>
+<rect width="800" height="800" rx="42" fill="url(#bg)"/>
+<circle cx="705" cy="104" r="126" fill="#FFD2C1" opacity=".44"/><circle cx="90" cy="610" r="155" fill="#FFD2C1" opacity=".22"/>
+<path d="M0 610Q200 560 410 626T800 600V800H0Z" fill="url(#floor)"/><path d="M60 678H740" stroke="#D0DCE4" stroke-width="2" opacity=".65"/>
+<g fill="#FFFFFF" opacity=".62"><circle cx="620" cy="430" r="4" fill="#BC6041" opacity="0.25"/><circle cx="638" cy="430" r="4" fill="#BC6041" opacity="0.35"/><circle cx="620" cy="448" r="4" fill="#BC6041" opacity="0.45"/><circle cx="638" cy="448" r="4" fill="#BC6041" opacity="0.55"/></g>
+<g transform=""><g filter="url(#shadow)"><path d="M317 279Q317 230 361 214H439Q483 230 483 279L468 515Q465 553 432 559H368Q335 553 332 515Z" fill="url(#metal)" stroke="#9BAEBA" stroke-width="4"/><path d="M323 326L264 350Q246 358 258 379L330 399" fill="url(#metal)" stroke="#9BAEBA" stroke-width="5"/><path d="M460 275Q537 246 536 316Q535 367 473 388" fill="none" stroke="#8C9FAC" stroke-width="24" stroke-linecap="round"/><path d="M460 275Q537 246 536 316Q535 367 473 388" fill="none" stroke="#E9EFF3" stroke-width="13" stroke-linecap="round"/><rect x="340" y="222" width="120" height="20" rx="10" fill="#D0DBE2"/><path d="M343 439H470" stroke="#9CACB7" stroke-width="4"/><rect x="375" y="480" width="50" height="24" rx="8" fill="#2B3A46"/><circle cx="400" cy="492" r="5" fill="#BC6041"/><ellipse cx="400" cy="574" rx="105" ry="15" fill="#C8D4DC"/></g></g>
+
+<g font-family="Arial, Helvetica, sans-serif"><rect x="35" y="34" width="139" height="34" rx="17" fill="#FFFFFF" fill-opacity=".85" stroke="#D7E2E8"/><text x="104" y="56" text-anchor="middle" font-size="14" fill="#3A4E5C" font-weight="700" letter-spacing="1.4">BTVH HOME</text><rect x="550" y="34" width="215" height="34" rx="17" fill="#FFFFFF" fill-opacity=".8" stroke="#D7E2E8"/><text x="657" y="56" text-anchor="middle" font-size="12" fill="#5E707C" font-weight="700" letter-spacing=".6">ẢNH MINH HỌA</text><rect x="35" y="728" width="730" height="1" fill="#D3DFE6"/><text x="36" y="760" font-size="13" fill="#5D717F" letter-spacing="1.2">GÓC SẢN PHẨM</text><text x="764" y="760" text-anchor="end" font-size="13" fill="#BC6041" font-weight="700">BTVH • HOME &amp; LIVING</text></g>
+</svg>

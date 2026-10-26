@@ -1,0 +1,26 @@
+@model List<Product>
+@{ ViewData["Title"] = "Yêu thích"; }
+
+<div class="container wishlist-page">
+    <div class="page-header">
+        <h1>❤️ Sản phẩm yêu thích</h1>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">💔</div>
+            <h3>Chưa có sản phẩm yêu thích</h3>
+            <p>Nhấn vào ♡ trên sản phẩm để lưu vào đây.</p>
+            <a href="/san-pham" class="btn-primary">Khám phá sản phẩm</a>
+        </div>
+    }
+    else
+    {
+        <div class="product-grid">
+            @foreach (var p in Model) { <partial name="_ProductCard" model="p" /> }
+        </div>
+    }
+</div>
+
+

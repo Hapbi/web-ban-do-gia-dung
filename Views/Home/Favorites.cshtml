@@ -1,7 +1,0 @@
-@model List<Product>
-<h1 class="pt">♥ Sản phẩm yêu thích</h1>
-<p class="muted">Các sản phẩm bạn đã lưu</p>
-<div class="grid" style="margin-top:22px">
-    @foreach (var p in Model) { <partial name="_Card" model="p" /> }
-</div>
-@if (Model.Count == 0) { <p class="muted">Bạn chưa lưu sản phẩm nào. <a href="/" style="color:var(--red)">Xem sản phẩm</a></p> }

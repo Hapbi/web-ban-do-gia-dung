@@ -1,9 +1,0 @@
-@model Post
-@{ ViewData["Title"] = Model.Title + " - "; }
-<div class="crumb"><a href="/">Trang chủ</a> / <a href="/Home/Posts">Bài viết</a> / @Model.Title</div>
-<article class="box" style="max-width:820px">
-    <h1 style="margin-top:0">@Model.Title</h1>
-    <p class="muted">@Model.Created.ToString("dd/MM/yyyy") · @Model.Author</p>
-    @if (!string.IsNullOrEmpty(Model.ImageUrl)) { <img src="@Model.ImageUrl" alt="" style="max-width:100%;border-radius:8px" onerror="this.style.display='none'"> }
-    @foreach (var para in (Model.Content ?? "").Split('\n', StringSplitOptions.RemoveEmptyEntries)) { <p>@para</p> }
-</article>

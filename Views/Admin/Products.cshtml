@@ -1,0 +1,61 @@
+@model AdminProductListVM
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Quản lý sản phẩm"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div><h1>Quản lý sản phẩm</h1><p class="muted">@Model.Total sản phẩm</p></div>
+        <a href="/admin/san-pham/them" class="btn-primary">+ Thêm sản phẩm</a>
+    </div>
+
+    <form method="get" class="admin-filter">
+        <input name="q" value="@Model.Search" placeholder="Tìm sản phẩm..." />
+        <select name="catId">
+            <option value="">Tất cả danh mục</option>
+            @foreach (var c in Model.Categories) { <option value="@c.Id" selected="@(Model.CategoryId == c.Id)">@c.Name</option> }
+        </select>
+        <select name="active">
+            <option value="">Tất cả trạng thái</option>
+            <option value="true" selected="@(Model.IsActive == true)">Đang bán</option>
+            <option value="false" selected="@(Model.IsActive == false)">Đã ẩn</option>
+        </select>
+        <label class="checkbox-label"><input type="checkbox" name="lowStockOnly" value="true" checked="@Model.LowStockOnly" /><span>Sắp hết</span></label>
+        <button type="submit" class="btn-primary">Lọc</button>
+    </form>
+
+    <div class="dash-panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Trạng thái</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.Products)
+                    {
+                        <tr>
+                            <td>
+                                <div class="product-cell">
+                                    <img src="@p.PrimaryImage" alt="" onerror="this.onerror=null;this.src='/images/products/fallback.svg'" />
+                                    <div><strong>@p.Name</strong><div class="muted small">@p.Brand?.Name</div></div>
+                                </div>
+                            </td>
+                            <td>@p.Category?.Name</td>
+                            <td><strong>@p.CurrentPrice.ToString("N0")đ</strong></td>
+                            <td><span class="stock-badge @(p.Stock > 5 ? "stock-ok" : p.Stock > 0 ? "stock-low" : "stock-out")">@p.Stock</span></td>
+                            <td>@p.SoldCount</td>
+                            <td>@(p.IsActive ? "Đang bán" : "Đã ẩn")</td>
+                            <td class="actions-cell">
+                                <a href="/admin/san-pham/@p.Id/sua" class="link-edit">Sửa</a>
+                                <form method="post" action="/admin/san-pham/@p.Id/an" style="display:inline">
+                                    <button type="submit" class="link-secondary">@(p.IsActive ? "Ẩn" : "Hiện")</button>
+                                </form>
+                                <form method="post" action="/admin/san-pham/@p.Id/xoa" style="display:inline" onsubmit="return confirm('Xóa?')">
+                                    <button type="submit" class="link-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

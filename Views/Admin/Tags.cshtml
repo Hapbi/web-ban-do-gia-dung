@@ -1,0 +1,13 @@
+@model List<Tag>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Thẻ sản phẩm"; }
+<div class="admin-dashboard">
+    <div class="admin-header"><div><div class="eyebrow">QUẢN LÝ DANH MỤC</div><h1>🏷️ Thẻ sản phẩm</h1><p class="muted">Dùng thẻ như “inverter”, “tiết kiệm điện”, “cao cấp” để chuẩn hóa nhãn sản phẩm.</p></div></div>
+    <div class="dash-panel"><h3>Thêm thẻ mới</h3><form method="post" action="/admin/the-san-pham/luu" class="admin-filter"><input name="name" required maxlength="80" placeholder="Ví dụ: inverter"/><button class="btn-primary">Thêm thẻ</button></form></div>
+    <div class="dash-panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Tên thẻ</th><th>Slug</th><th>Thao tác</th></tr></thead><tbody>
+    @foreach (var tag in Model)
+    {
+        <tr><td><form id="tag-@tag.Id" method="post" action="/admin/the-san-pham/luu"><input type="hidden" name="id" value="@tag.Id"/><input name="name" value="@tag.Name" required maxlength="80"/></form></td><td class="muted small">@tag.Slug</td><td><button form="tag-@tag.Id" class="btn-small btn-primary">Lưu</button> <form method="post" action="/admin/the-san-pham/@tag.Id/xoa" style="display:inline" onsubmit="return confirm('Xóa thẻ này?')"><button class="btn-small btn-danger">Xóa</button></form></td></tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="3" class="muted" style="text-align:center;padding:28px">Chưa có thẻ nào.</td></tr> }
+    </tbody></table></div></div>
+</div>

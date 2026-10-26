@@ -1,0 +1,51 @@
+@model AdminOrderListVM
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Quản lý đơn hàng"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div><h1>Quản lý đơn hàng</h1><p class="muted">@Model.Total đơn</p></div>
+        <a class="btn-ghost" href="@Url.Action("ExportOrdersCsv", "Admin", new { status = Model.Status, q = Model.Search })">⬇ Xuất CSV / Excel</a>
+    </div>
+
+    <form method="get" class="admin-filter">
+        <input name="q" value="@Model.Search" placeholder="Tìm mã đơn, tên, SĐT..." />
+        <select name="status">
+            <option value="">Tất cả trạng thái</option>
+            @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
+            {
+                <option value="@st" selected="@(Model.Status == st)">@st.Label() (@Model.StatusCounts.GetValueOrDefault(st, 0))</option>
+            }
+        </select>
+        <button type="submit" class="btn-primary">Lọc</button>
+    </form>
+
+    <div class="dash-panel">
+        <div class="orders-admin-list">
+            @foreach (var o in Model.Orders)
+            {
+                <div class="order-admin-card">
+                    <div class="order-admin-head">
+                        <div>
+                            <div class="order-admin-code">
+                                <strong>#@o.Code</strong>
+                                <span class="status-badge status-@o.Status.Color()">@o.Status.Label()</span>
+                                @if (o.Payment == PaymentStatus.Paid) { <span class="badge badge-success">💰 Đã TT</span> }
+                            </div>
+                            <div class="muted small">@o.CustomerName · @o.Phone · @o.CreatedAt.ToString("dd/MM HH:mm")</div>
+                        </div>
+                        <div class="order-admin-total">@o.Total.ToString("N0")đ</div>
+                    </div>
+                    <div class="muted small">@o.Address</div>
+                    <div class="order-admin-items">
+                        @foreach (var i in o.Items) { <span class="order-item-chip">@i.ProductName ×@i.Quantity</span> }
+                    </div>
+                    <div class="order-admin-actions">
+                        <a href="/admin/don-hang/@o.Id" class="btn-ghost">Xem chi tiết</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,5 @@
+@model List<AuditLog>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Nhật ký hoạt động"; }
+<div class="admin-dashboard"><div class="admin-header"><div><div class="eyebrow">BẢO MẬT & KIỂM SOÁT</div><h1>🧾 Nhật ký hoạt động</h1><p class="muted">Tối đa 300 bản ghi gần nhất; ghi lại thao tác quản trị và xử lý thanh toán.</p></div></div>
+<form method="get" class="admin-filter"><input name="q" value="@ViewBag.Search" placeholder="Tìm người dùng, hành động, đối tượng..."/><button class="btn-primary">Tìm</button></form>
+<div class="dash-panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Thời điểm</th><th>Người thao tác</th><th>Hành động</th><th>Đối tượng</th><th>Chi tiết</th><th>IP</th></tr></thead><tbody>@foreach(var log in Model){<tr><td>@log.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td><td>@log.UserEmail</td><td><strong>@log.Action</strong></td><td>@log.Entity #@log.EntityId</td><td>@log.Details</td><td class="muted small">@log.IpAddress</td></tr>}@if(!Model.Any()){<tr><td colspan="6" class="muted" style="text-align:center;padding:30px">Chưa có nhật ký phù hợp.</td></tr>}</tbody></table></div></div></div>

@@ -1,0 +1,165 @@
+@model DashboardVM
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Dashboard"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div>
+            <div class="eyebrow">BẢNG ĐIỀU KHIỂN</div>
+            <h1>Dashboard</h1>
+            <p class="muted">Xin chào @User.Identity?.Name, đây là tình hình cửa hàng hôm nay.</p>
+        </div>
+        <div class="admin-header-actions">
+            <a href="/admin/san-pham/them" class="btn-primary">+ Thêm sản phẩm</a>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid">
+        <div class="stat-card-new stat-red reveal">
+            <div class="stat-top"><span>Doanh thu hôm nay</span><span class="stat-icon">₫</span></div>
+            <div class="stat-value">@Model.RevenueToday.ToString("N0")đ</div>
+            @{
+                var diff = Model.RevenueYesterday > 0 ? ((Model.RevenueToday - Model.RevenueYesterday) / Model.RevenueYesterday * 100) : 0;
+            }
+            <div class="stat-trend @(diff >= 0 ? "up" : "down")">
+                @(diff >= 0 ? "↑" : "↓") @Math.Abs(diff).ToString("0.0")% so với hôm qua
+            </div>
+        </div>
+        <div class="stat-card-new stat-purple reveal">
+            <div class="stat-top"><span>Doanh thu tháng</span><span class="stat-icon">▦</span></div>
+            <div class="stat-value">@Model.RevenueMonth.ToString("N0")đ</div>
+            <div class="stat-trend">Từ đầu tháng đến nay</div>
+        </div>
+        <div class="stat-card-new stat-blue reveal">
+            <div class="stat-top"><span>Tổng doanh thu</span><span class="stat-icon">↗</span></div>
+            <div class="stat-value">@Model.RevenueTotal.ToString("N0")đ</div>
+            <div class="stat-trend">@Model.PaidOrders đơn đã thanh toán</div>
+        </div>
+        <div class="stat-card-new stat-amber reveal">
+            <div class="stat-top"><span>Chờ xác nhận</span><span class="stat-icon">◷</span></div>
+            <div class="stat-value">@Model.PendingOrders</div>
+            <div class="stat-trend">Tổng @Model.TotalOrders đơn</div>
+        </div>
+    </div>
+
+    <div class="dash-grid-2">
+        <div class="dash-panel"><div class="panel-head"><div><h3>⚡ Việc cần làm</h3><p class="muted small">Lối tắt tác vụ vận hành</p></div></div>
+            <div class="quick-action-grid">
+                <a class="quick-action" href="/admin/thanh-toan"><strong>@Model.PendingPayments</strong><span>Chờ xác minh thanh toán →</span></a>
+                <a class="quick-action" href="/admin/marketplace"><strong>@Model.PendingListings</strong><span>Listing chờ duyệt →</span></a>
+                <a class="quick-action" href="/admin/tin-nhan"><strong>@Model.NewContacts</strong><span>Tin nhắn mới →</span></a>
+                <a class="quick-action" href="/admin/bao-cao/van-hanh"><strong>↗</strong><span>Báo cáo vận hành →</span></a>
+            </div>
+        </div>
+        <div class="dash-panel"><div class="panel-head"><div><h3>🛠️ Quản lý nâng cao</h3><p class="muted small">Từ dữ liệu đến trải nghiệm cửa hàng</p></div></div>
+            <div class="quick-link-list"><a href="/admin/ton-kho">📦 Điều chỉnh tồn kho</a><a href="/admin/danh-muc">🗂️ Danh mục</a><a href="/admin/thuong-hieu">🏷️ Thương hiệu</a><a href="/admin/banner">🖼️ Banner trang chủ</a><a href="/admin/cau-hinh">⚙️ Cấu hình cửa hàng / ngân hàng</a><a href="/admin/nhat-ky">🧾 Nhật ký hoạt động</a></div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="dash-grid-2">
+        <div class="dash-panel reveal">
+            <div class="panel-head">
+                <div><h3>Doanh thu 7 ngày</h3><p class="muted small">Chỉ đơn đã thanh toán</p></div>
+                <span class="panel-badge">7 NGÀY</span>
+            </div>
+            <div class="chart-bars">
+                @foreach (var c in Model.Chart7Days)
+                {
+                    var h = Model.ChartMax > 0 ? (int)Math.Round(c.Amount / Model.ChartMax * 100) : 0;
+                    <div class="chart-col">
+                        <div class="chart-label">@(c.Amount > 0 ? (c.Amount / 1000000m).ToString("0.#") + "tr" : "")</div>
+                        <div class="chart-bar-wrap">
+                            <div class="chart-bar" style="height:@(Math.Max(4, h))%" title="@c.Label: @c.Amount.ToString("N0")đ"></div>
+                        </div>
+                        <div class="chart-day">@c.Label</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="dash-panel reveal">
+            <div class="panel-head"><div><h3>Đơn theo trạng thái</h3></div></div>
+            <div class="status-list">
+                @foreach (OrderStatus st in Enum.GetValues(typeof(OrderStatus)))
+                {
+                    var count = Model.StatusCounts.GetValueOrDefault(st, 0);
+                    <div class="status-row">
+                        <span class="status-label">
+                            <span class="status-dot dot-@st.Color()"></span>@st.Label()
+                        </span>
+                        <strong>@count</strong>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-grid-2">
+        <div class="dash-panel reveal">
+            <div class="panel-head">
+                <div><h3>Tồn kho</h3><p class="muted small">Tình trạng sản phẩm</p></div>
+                <a href="/admin/san-pham" class="panel-link">Quản lý →</a>
+            </div>
+            <div class="inventory-summary">
+                <div class="inv-card inv-good"><span class="inv-number">@Model.InStock</span><span class="inv-label">Còn hàng</span></div>
+                <div class="inv-card inv-low"><span class="inv-number">@Model.LowStock</span><span class="inv-label">Sắp hết</span></div>
+                <div class="inv-card inv-out"><span class="inv-number">@Model.OutStock</span><span class="inv-label">Hết hàng</span></div>
+            </div>
+            @if (Model.LowStockProducts.Any())
+            {
+                <div class="low-stock-list">
+                    <h4>Sản phẩm sắp hết:</h4>
+                    @foreach (var p in Model.LowStockProducts)
+                    {
+                        <div class="low-stock-row"><span>@p.Name</span><span class="text-amber">Còn @p.Stock</span></div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="dash-panel reveal">
+            <div class="panel-head"><div><h3>Top sản phẩm bán chạy</h3></div></div>
+            <div class="top-list">
+                @for (int i = 0; i < Model.TopProducts.Count; i++)
+                {
+                    var tp = Model.TopProducts[i];
+                    <div class="top-row">
+                        <span class="top-rank rank-@i">@(i + 1)</span>
+                        <div class="top-info">
+                            <div class="top-name">@tp.Product.Name</div>
+                            <div class="muted small">Đã bán @tp.Qty</div>
+                        </div>
+                        <strong>@tp.Revenue.ToString("N0")đ</strong>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-panel reveal">
+        <div class="panel-head">
+            <div><h3>Đơn hàng gần đây</h3></div>
+            <a href="/admin/don-hang" class="panel-link">Xem tất cả →</a>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Tổng</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
+                <tbody>
+                    @foreach (var o in Model.RecentOrders)
+                    {
+                        <tr>
+                            <td><code>@o.Code</code></td>
+                            <td>@o.CustomerName</td>
+                            <td><strong>@o.Total.ToString("N0")đ</strong></td>
+                            <td><span class="status-badge status-@o.Status.Color()">@o.Status.Label()</span></td>
+                            <td class="muted">@o.CreatedAt.ToString("dd/MM HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

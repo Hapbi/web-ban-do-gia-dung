@@ -1,0 +1,37 @@
+@model List<Category>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Danh mục"; }
+<div class="admin-dashboard">
+    <div class="admin-header"><div><div class="eyebrow">DANH MỤC SẢN PHẨM</div><h1>🗂️ Quản lý danh mục</h1><p class="muted">Ẩn danh mục giúp giữ nguyên các sản phẩm và đơn hàng cũ.</p></div></div>
+    <div class="dash-panel">
+        <h3>Thêm danh mục</h3>
+        <form method="post" action="/admin/danh-muc/luu" class="admin-filter">
+            <input name="name" required placeholder="Tên danh mục" />
+            <input name="icon" maxlength="8" placeholder="Icon 📦" />
+            <input name="displayOrder" type="number" min="0" value="0" placeholder="Thứ tự" />
+            <input type="hidden" name="isActive" value="true" />
+            <button class="btn-primary">Thêm</button>
+        </form>
+    </div>
+    <div class="dash-panel"><div class="table-wrap"><table class="data-table">
+        <thead><tr><th>Icon</th><th>Tên</th><th>Slug</th><th>Thứ tự</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody>
+        @foreach (var c in Model)
+        {
+            var formId = "cat-edit-" + c.Id;
+            <tr>
+                <td><input form="@formId" name="icon" value="@c.Icon" style="max-width:72px" /></td>
+                <td><input form="@formId" name="name" value="@c.Name" required /><input form="@formId" type="hidden" name="id" value="@c.Id" /><input form="@formId" type="hidden" name="isActive" value="@c.IsActive.ToString().ToLowerInvariant()" /></td>
+                <td class="muted small">@c.Slug</td>
+                <td><input form="@formId" name="displayOrder" type="number" value="@c.DisplayOrder" style="max-width:90px" /></td>
+                <td><span class="badge @(c.IsActive ? "badge-success" : "badge-danger")">@(c.IsActive ? "Đang hiện" : "Đã ẩn")</span></td>
+                <td>
+                    <form id="@formId" method="post" action="/admin/danh-muc/luu"></form>
+                    <button form="@formId" class="btn-small btn-primary">Lưu</button>
+                    <form method="post" action="/admin/danh-muc/@c.Id/an-hien" style="display:inline"><button class="link-secondary">@(c.IsActive ? "Ẩn" : "Hiện")</button></form>
+                </td>
+            </tr>
+        }
+        @if (!Model.Any()) { <tr><td colspan="6" class="muted" style="text-align:center;padding:30px">Chưa có danh mục.</td></tr> }
+        </tbody>
+    </table></div></div>
+</div>

@@ -1,0 +1,73 @@
+@model List<User>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Người dùng"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div><h1>Quản lý người dùng</h1><p class="muted">@Model.Count người dùng</p></div>
+    </div>
+
+    <form method="get" class="admin-filter">
+        <input name="q" value="@ViewBag.Search" placeholder="Tìm email, tên..." />
+        <select name="role">
+            <option value="">Tất cả vai trò</option>
+            <option value="Customer" selected="@(ViewBag.RoleFilter == "Customer")">Customer</option>
+            <option value="Staff" selected="@(ViewBag.RoleFilter == "Staff")">Staff</option>
+            <option value="Admin" selected="@(ViewBag.RoleFilter == "Admin")">Admin</option>
+        </select>
+        <button type="submit" class="btn-primary">Lọc</button>
+    </form>
+
+    <div class="dash-panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Người dùng</th><th>Email</th><th>SĐT</th><th>Vai trò</th><th>Quyền thanh toán</th><th>Trạng thái</th><th>Ngày tạo</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var u in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="product-cell">
+                                    <div class="user-avatar" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;display:grid;place-items:center;font-weight:700">@u.Avatar</div>
+                                    <strong>@u.FullName</strong>
+                                </div>
+                            </td>
+                            <td>@u.Email</td>
+                            <td>@u.Phone</td>
+                            <td>
+                                <form method="post" action="/admin/nguoi-dung/@u.Id/role" style="display:inline">
+                                    <select name="role" onchange="this.form.submit()">
+                                        <option value="Customer" selected="@(u.Role == "Customer")">Customer</option>
+                                        <option value="Staff" selected="@(u.Role == "Staff")">Staff</option>
+                                        <option value="Admin" selected="@(u.Role == "Admin")">Admin</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                @if (u.Role == "Staff")
+                                {
+                                    <form method="post" action="/admin/nguoi-dung/@u.Id/quyen-thanh-toan" style="display:flex;gap:.4rem;align-items:center">
+                                        <label class="small"><input type="checkbox" name="canVerifyPayments" value="true" checked="@u.CanVerifyPayments" onchange="this.form.submit()" /> Được xác minh</label>
+                                        <input type="hidden" name="canVerifyPayments" value="false" />
+                                    </form>
+                                }
+                                else { <span class="muted small">Không áp dụng</span> }
+                            </td>
+                            <td>
+                                @if (u.IsActive) { <span class="badge badge-success">Hoạt động</span> }
+                                else { <span class="badge badge-danger">Đã khóa</span> }
+                            </td>
+                            <td class="muted">@u.CreatedAt.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <form method="post" action="/admin/nguoi-dung/@u.Id/khoa" style="display:inline">
+                                    <button type="submit" class="link-secondary">@(u.IsActive ? "Khóa" : "Mở")</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

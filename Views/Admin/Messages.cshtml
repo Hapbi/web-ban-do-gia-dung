@@ -1,0 +1,14 @@
+@model List<ContactMessage>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Tin nhắn"; }
+<div class="admin-dashboard"><div class="admin-header"><div><div class="eyebrow">CHĂM SÓC KHÁCH HÀNG</div><h1>💬 Tin nhắn & phản hồi</h1><p class="muted">Theo dõi xử lý liên hệ, phản ánh và khiếu nại.</p></div></div>
+@foreach (var m in Model)
+{
+ <div class="dash-panel message-card @(m.Status == ContactStatus.New ? "unread" : "")">
+  <div class="message-head"><div><strong>@m.FullName</strong><span class="muted small">@m.Email · @m.Phone · @m.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span><div class="muted small">@m.Type.Label() · <strong>@m.Status.Label()</strong></div></div><span class="badge @(m.Status==ContactStatus.Resolved?"badge-success":m.Status==ContactStatus.Processing?"badge-warning":"badge-danger")">@m.Status.Label()</span></div>
+  <div class="message-body">@if (!string.IsNullOrEmpty(m.Subject)) { <strong>@m.Subject</strong> }<p>@m.Message</p></div>
+  <form method="post" action="/admin/tin-nhan/@m.Id/trang-thai" class="stack-form"><label>Trạng thái xử lý</label><select name="status"><option value="New" selected="@(m.Status==ContactStatus.New)">Mới</option><option value="Processing" selected="@(m.Status==ContactStatus.Processing)">Đang xử lý</option><option value="Resolved" selected="@(m.Status==ContactStatus.Resolved)">Đã xử lý</option></select><label>Ghi chú nội bộ</label><textarea name="staffNote" rows="2" placeholder="Ghi lại hướng giải quyết...">@m.StaffNote</textarea><button class="btn-small btn-primary">Lưu trạng thái</button></form>
+  @if(!string.IsNullOrWhiteSpace(m.HandledBy)){<div class="muted small">Cập nhật bởi @m.HandledBy @(m.ResolvedAt.HasValue?"· Hoàn tất "+m.ResolvedAt.Value.ToString("dd/MM HH:mm"):"")</div>}
+ </div>
+}
+@if(!Model.Any()){<div class="dash-panel muted">Chưa có tin nhắn.</div>}
+</div>

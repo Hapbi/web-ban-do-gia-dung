@@ -1,0 +1,59 @@
+@model ProductEditVM
+@{ Layout = "_AdminLayout"; ViewData["Title"] = Model.Id == 0 ? "Thêm sản phẩm" : "Sửa sản phẩm"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div>
+            <a href="/admin/san-pham" class="back-link">← Danh sách</a>
+            <h1>@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <form method="post" action="/admin/san-pham/luu" class="dash-panel">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-row-2">
+            <div class="form-group"><label asp-for="Name">Tên sản phẩm</label><input asp-for="Name" required /></div>
+            <div class="form-group">
+                <label asp-for="CategoryId">Danh mục</label>
+                <select asp-for="CategoryId" required>
+                    @foreach (var c in Model.Categories) { <option value="@c.Id" selected="@(Model.CategoryId == c.Id)">@c.Name</option> }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandId">Thương hiệu</label>
+                <select asp-for="BrandId" required>
+                    @foreach (var b in Model.Brands) { <option value="@b.Id" selected="@(Model.BrandId == b.Id)">@b.Name</option> }
+                </select>
+            </div>
+            <div class="form-group"><label asp-for="Stock">Tồn kho</label><input asp-for="Stock" type="number" required /></div>
+            <div class="form-group"><label asp-for="OriginalPrice">Giá gốc (đ)</label><input asp-for="OriginalPrice" type="number" required /></div>
+            <div class="form-group"><label asp-for="SalePrice">Giá KM (đ)</label><input asp-for="SalePrice" type="number" /></div>
+        </div>
+
+        <div class="form-group"><label asp-for="ShortDescription">Mô tả ngắn</label><input asp-for="ShortDescription" /></div>
+        <div class="form-group"><label asp-for="Description">Mô tả</label><textarea asp-for="Description" rows="5"></textarea></div>
+        <div class="form-group"><label asp-for="Tags">Tags (cách nhau bằng dấu phẩy)</label><input asp-for="Tags" /></div>
+
+        <div class="form-group">
+            <label>URL ảnh (mỗi dòng 1 URL, dòng đầu là ảnh chính)</label>
+            <textarea name="imageUrls" rows="4">@string.Join("\n", Model.ImageUrls)</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Thông số (mỗi dòng: Tên: Giá trị)</label>
+            <textarea name="specsText" rows="6">@string.Join("\n", Model.Specs.Select(s => $"{s.Name}: {s.Value}"))</textarea>
+        </div>
+
+        <div class="form-row-2">
+            <label class="checkbox-label"><input asp-for="IsActive" /><span>Đang bán</span></label>
+            <label class="checkbox-label"><input asp-for="IsFeatured" /><span>Nổi bật</span></label>
+        </div>
+
+        <div class="form-actions">
+            <a href="/admin/san-pham" class="btn-ghost">Hủy</a>
+            <button type="submit" class="btn-primary">Lưu sản phẩm</button>
+        </div>
+    </form>
+</div>
+
+

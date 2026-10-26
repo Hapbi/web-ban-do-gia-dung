@@ -1,0 +1,58 @@
+@model DashboardVM
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Nhân viên"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div>
+            <div class="eyebrow">NHÂN VIÊN BÁN HÀNG</div>
+            <h1>Xin chào, @User.Identity?.Name</h1>
+            <p class="muted">Các đơn hàng cần xử lý hôm nay.</p>
+        </div>
+        <a href="/staff/kanban" class="btn-primary">🎯 Kanban Board</a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-card-new stat-amber">
+            <div class="stat-top"><span>Chờ xác nhận</span><span class="stat-icon">◷</span></div>
+            <div class="stat-value">@Model.StatusCounts.GetValueOrDefault(OrderStatus.Pending, 0)</div>
+        </div>
+        <div class="stat-card-new stat-blue">
+            <div class="stat-top"><span>Đã xác nhận</span><span class="stat-icon">✓</span></div>
+            <div class="stat-value">@Model.StatusCounts.GetValueOrDefault(OrderStatus.Confirmed, 0)</div>
+        </div>
+        <div class="stat-card-new stat-purple">
+            <div class="stat-top"><span>Đang giao</span><span class="stat-icon">🚚</span></div>
+            <div class="stat-value">@Model.StatusCounts.GetValueOrDefault(OrderStatus.Shipping, 0)</div>
+        </div>
+        <div class="stat-card-new stat-green">
+            <div class="stat-top"><span>Đã giao</span><span class="stat-icon">✓</span></div>
+            <div class="stat-value">@Model.StatusCounts.GetValueOrDefault(OrderStatus.Delivered, 0)</div>
+        </div>
+    </div>
+
+    <div class="dash-panel">
+        <h3>Cần xử lý ngay</h3>
+        @if (Model.RecentOrders.Any(o => o.Status == OrderStatus.Pending))
+        {
+            @foreach (var o in Model.RecentOrders.Where(o => o.Status == OrderStatus.Pending).Take(5))
+            {
+                <div class="pending-order-row">
+                    <div>
+                        <strong>#@o.Code</strong>
+                        <div class="muted small">@o.CustomerName · @o.CreatedAt.ToString("HH:mm dd/MM")</div>
+                    </div>
+                    <div class="order-admin-total">@o.Total.ToString("N0")đ</div>
+                    <form method="post" action="/staff/don/@o.Id/xac-nhan" style="display:inline">
+                        <button type="submit" class="btn-small btn-success">Xác nhận</button>
+                    </form>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="muted" style="padding:20px 0;text-align:center">✓ Không có đơn nào cần xử lý</p>
+        }
+    </div>
+</div>
+
+

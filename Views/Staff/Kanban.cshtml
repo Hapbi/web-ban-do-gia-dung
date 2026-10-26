@@ -1,0 +1,56 @@
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Kanban Board"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div><h1>🎯 Kanban Board</h1><p class="muted">Xử lý đơn hàng theo từng bước</p></div>
+    </div>
+
+    <div class="kanban-board">
+        @{
+            var columns = new[]
+            {
+                new { Status = OrderStatus.Pending, Orders = (List<Order>)ViewBag.Pending, Label = "Chờ xác nhận", Color = "amber", Action = "xac-nhan", ActionLabel = "Xác nhận" },
+                new { Status = OrderStatus.Confirmed, Orders = (List<Order>)ViewBag.Confirmed, Label = "Đã xác nhận", Color = "sky", Action = "dong-goi", ActionLabel = "Đóng gói" },
+                new { Status = OrderStatus.Packing, Orders = (List<Order>)ViewBag.Packing, Label = "Đang đóng gói", Color = "indigo", Action = "giao", ActionLabel = "Giao hàng" },
+                new { Status = OrderStatus.Shipping, Orders = (List<Order>)ViewBag.Shipping, Label = "Đang giao", Color = "purple", Action = "giao-xong", ActionLabel = "Đã giao" },
+                new { Status = OrderStatus.Delivered, Orders = (List<Order>)ViewBag.Delivered, Label = "Đã giao", Color = "emerald", Action = (string?)null, ActionLabel = "" }
+            };
+        }
+
+        @foreach (var col in columns)
+        {
+            <div class="kanban-col">
+                <div class="kanban-col-header kanban-@col.Color">
+                    <span>@col.Label</span>
+                    <span class="kanban-count">@col.Orders.Count</span>
+                </div>
+                <div class="kanban-col-body">
+                    @foreach (var o in col.Orders)
+                    {
+                        <div class="kanban-card">
+                            <div class="kanban-card-head">
+                                <strong>#@o.Code</strong>
+                                <span class="muted small">@o.CreatedAt.ToString("HH:mm dd/MM")</span>
+                            </div>
+                            <div class="kanban-card-name">@o.CustomerName</div>
+                            <div class="kanban-card-total">@o.Total.ToString("N0")đ</div>
+                            <div class="kanban-card-items">@o.Items.Count sản phẩm</div>
+                            @if (col.Action != null)
+                            {
+                                <form method="post" action="/staff/don/@o.Id/@col.Action">
+                                    <button type="submit" class="kanban-btn">@col.ActionLabel →</button>
+                                </form>
+                            }
+                        </div>
+                    }
+                    @if (!col.Orders.Any())
+                    {
+                        <div class="kanban-empty">Không có đơn</div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

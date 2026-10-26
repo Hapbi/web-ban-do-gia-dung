@@ -1,0 +1,38 @@
+@model List<BlogPost>
+@{ Layout = "_AdminLayout"; ViewData["Title"] = "Bài viết"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div><h1>Quản lý bài viết</h1></div>
+        <a href="/admin/blog/them" class="btn-primary">+ Viết bài mới</a>
+    </div>
+
+    <div class="dash-panel">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Tiêu đề</th><th>Danh mục</th><th>Tác giả</th><th>Lượt xem</th><th>Trạng thái</th><th>Ngày</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model)
+                    {
+                        <tr>
+                            <td><strong>@p.Title</strong></td>
+                            <td>@p.Category</td>
+                            <td>@p.AuthorName</td>
+                            <td>@p.ViewCount</td>
+                            <td>@(p.IsPublished ? "Đã đăng" : "Bản nháp")</td>
+                            <td class="muted">@p.CreatedAt.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a href="/admin/blog/@p.Id/sua" class="link-edit">Sửa</a>
+                                <form method="post" action="/admin/blog/@p.Id/xoa" style="display:inline" onsubmit="return confirm('Xóa?')">
+                                    <button type="submit" class="link-danger">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

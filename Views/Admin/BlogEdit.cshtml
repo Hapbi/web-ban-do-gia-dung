@@ -1,0 +1,31 @@
+@model BlogPost
+@{ Layout = "_AdminLayout"; ViewData["Title"] = Model.Id == 0 ? "Viết bài" : "Sửa bài"; }
+
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <div>
+            <a href="/admin/blog" class="back-link">← Danh sách</a>
+            <h1>@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <form method="post" action="/admin/blog/luu" class="dash-panel">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group"><label>Tiêu đề</label><input asp-for="Title" required /></div>
+        <div class="form-row-2">
+            <div class="form-group"><label>Danh mục</label><input asp-for="Category" /></div>
+            <div class="form-group"><label>Tác giả</label><input asp-for="AuthorName" /></div>
+        </div>
+        <div class="form-group"><label>Ảnh cover URL</label><input asp-for="CoverImage" /></div>
+        <div class="form-group"><label>Tóm tắt</label><textarea asp-for="Summary" rows="2"></textarea></div>
+        <div class="form-group"><label>Nội dung</label><textarea asp-for="Content" rows="12"></textarea></div>
+        <div class="form-group"><label>Tags</label><input asp-for="Tags" /></div>
+        <label class="checkbox-label"><input asp-for="IsPublished" /><span>Xuất bản</span></label>
+        <div class="form-actions">
+            <a href="/admin/blog" class="btn-ghost">Hủy</a>
+            <button type="submit" class="btn-primary">Lưu</button>
+        </div>
+    </form>
+</div>
+
+

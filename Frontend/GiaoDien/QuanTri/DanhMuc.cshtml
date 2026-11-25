@@ -1,0 +1,48 @@
+@model List<DanhMuc>
+@{ ViewBag.Title = "Quản lý danh mục"; }
+<div class="admin-panel">
+    <h3>Thêm danh mục</h3>
+    <form method="post" action="/quan-tri/danh-muc/luu" class="hang-cot" style="margin-top:15px">
+            @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="0" />
+        <input name="ten" placeholder="Tên danh mục" required />
+        <input name="icon" placeholder="📦" maxlength="8" style="max-width:80px" />
+        <button type="submit" class="btn-primary">+ Thêm</button>
+    </form>
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>Danh sách danh mục (@Model.Count)</h3>
+    <table class="table-glass mt-3">
+        <thead><tr><th>Icon</th><th>Tên</th><th>Số sản phẩm</th><th>Thao tác</th></tr></thead>
+        <tbody>
+            @foreach (var dm in Model)
+            {
+                var soSP = dm.DanhSachSanPham.Count;
+                <tr>
+                    <td>
+                        <input form="f-dm-@dm.Id" name="icon" value="@dm.Icon" style="width:60px;padding:4px 8px;background:#111;border:1px solid #333;color:#fff;border-radius:6px" />
+                    </td>
+                    <td>
+                        <form id="f-dm-@dm.Id" method="post" action="/quan-tri/danh-muc/luu">
+            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@dm.Id" />
+                            <input name="ten" value="@dm.Ten" required style="width:100%;padding:6px 10px;background:#111;border:1px solid #333;color:#fff;border-radius:6px" />
+                        </form>
+                    </td>
+                    <td>@soSP</td>
+                    <td>
+                        <button form="f-dm-@dm.Id" type="submit" class="btn-primary" style="padding:6px 12px;font-size:12px">Lưu</button>
+                        @if (soSP == 0)
+                        {
+                            <form method="post" action="/quan-tri/danh-muc/@dm.Id/xoa" style="display:inline" onsubmit="return confirm('Xóa danh mục này?')">
+            @Html.AntiForgeryToken()
+                                <button type="submit" class="nut-nguy-hiem" style="padding:6px 12px;font-size:12px">Xóa</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

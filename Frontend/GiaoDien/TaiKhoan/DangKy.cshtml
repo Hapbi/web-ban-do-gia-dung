@@ -1,0 +1,16 @@
+<div class="trang-dang-nhap">
+    <div class="the-dang-nhap">
+        <h1>Đăng ký</h1>
+        <p class="phu">Tạo tài khoản mới để mua sắm</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <label>Họ tên</label><input name="hoTen" required />
+            <label>Email</label><input type="email" name="email" required />
+            <label>Số điện thoại</label><input name="dienThoai" />
+            <label>Mật khẩu (tối thiểu 8 ký tự)</label><input type="password" name="matKhau" required minlength="8" />
+            <label>Nhập lại mật khẩu</label><input type="password" name="xacNhanMatKhau" required minlength="8" />
+            <button type="submit" class="nut-chinh nut-day-du nut-lon" data-nut-ripple>Đăng ký</button>
+        </form>
+        <div class="lien-ket-phu"><a href="/tai-khoan/dang-nhap">Đã có tài khoản? Đăng nhập</a></div>
+    </div>
+</div>

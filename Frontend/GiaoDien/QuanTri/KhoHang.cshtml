@@ -1,0 +1,29 @@
+@model List<SanPham>
+@{
+    ViewBag.Title = "Quản lý kho hàng";
+    var dangXuLy = ViewBag.DonDangXuLy as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+<div class="inventory-kpis">
+    <article><span>Đầu sản phẩm</span><strong>@ViewBag.TongSanPham</strong></article>
+    <article><span>Tổng số lượng tồn</span><strong>@((int)ViewBag.TongDonVi) món</strong></article>
+    <article><span>Giá trị tồn ước tính</span><strong>@TienIch.Tien((decimal)ViewBag.GiaTriTon)</strong></article>
+    <article><span>Sắp hết / hết hàng</span><strong>@ViewBag.SapHet / @ViewBag.Het</strong></article>
+    <article><span>Số lượng nằm trong đơn chưa hoàn tất</span><strong>@ViewBag.TongDonDangXuLy món</strong></article>
+</div>
+<div class="admin-panel mt-4">
+    <div class="panel-header"><div><h3>📦 Tình trạng tồn kho</h3><p class="phu">Tồn khả dụng đã được trừ ngay khi đặt hàng; cột “Trong đơn xử lý” chỉ thống kê riêng số món đang chờ xác nhận/giao, không trừ lần hai.</p></div><a class="btn-primary" href="/quan-tri/san-pham">Điều chỉnh sản phẩm</a></div>
+    <form method="get" class="hang-cot search-admin">
+        <input name="q" value="@ViewBag.Q" placeholder="Tìm tên sản phẩm" />
+        <select name="tinhTrang"><option value="">Tất cả tình trạng</option><option value="con" selected="@(ViewBag.TinhTrang as string == "con")">Còn hàng</option><option value="sap-het" selected="@(ViewBag.TinhTrang as string == "sap-het")">Sắp hết (1–5)</option><option value="het" selected="@(ViewBag.TinhTrang as string == "het")">Hết hàng</option></select>
+        <button class="btn-primary">Lọc</button>
+    </form>
+    <div class="table-responsive mt-3"><table class="table-glass"><thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Đã bán</th><th>Tồn khả dụng</th><th>Trong đơn xử lý</th><th>Giá trị tồn</th><th>Tình trạng</th><th></th></tr></thead><tbody>
+    @foreach (var sp in Model)
+    {
+        <tr><td><strong>@sp.Ten</strong><div class="phu">Mã SP: @sp.Id</div></td><td>@sp.DanhMuc?.Ten</td><td>@sp.DaBan</td><td><strong>@sp.TonKho</strong></td><td>@dangXuLy.GetValueOrDefault(sp.Id) món</td><td>@TienIch.Tien(sp.TonKho * sp.GiaHienTai)</td>
+            <td>@if (sp.TonKho <= 0) { <span class="status-pill status-off">Hết hàng</span> } else if (sp.TonKho <= 5) { <span class="status-pill status-warn">Sắp hết</span> } else { <span class="status-pill status-on">Còn hàng</span> }</td>
+            <td><a class="btn-primary btn-small" href="/quan-tri/san-pham/@sp.Id/sua">Chỉnh sửa</a></td></tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="8" class="phu">Không tìm thấy sản phẩm phù hợp.</td></tr> }
+    </tbody></table></div>
+</div>

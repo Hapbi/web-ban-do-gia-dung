@@ -1,0 +1,88 @@
+@using GIADUNGCHATLUONG.MoHinh
+@model List<SanPham>
+@{
+    var danhMucs = ViewBag.DanhMucs as List<DanhMuc> ?? new();
+    var dmChon = ViewBag.Dm as int?;
+    var sapXep = ViewBag.SapXep as string;
+    var q = ViewBag.Q as string;
+}
+<div class="khung phan" style="padding-top:100px">
+    <div class="dau-trang-san-pham">
+        <h1>@(string.IsNullOrWhiteSpace(q) ? "Tất cả sản phẩm" : $"Kết quả cho \"{q}\"")</h1>
+        <span class="phu">@ViewBag.TongSanPham sản phẩm</span>
+    </div>
+
+    <div class="bo-cuc-san-pham">
+        <aside class="bo-loc">
+            <form method="get" action="/san-pham">
+                <input type="hidden" name="q" value="@q" />
+                <div class="nhom-loc">
+                    <h3>Danh mục</h3>
+                    <a href="/san-pham@(string.IsNullOrWhiteSpace(q) ? "" : "?q=" + q)"
+                       class="lien-ket-loc @(dmChon == null ? "dang-chon" : "")">Tất cả</a>
+                    @foreach (var dm in danhMucs)
+                    {
+                        <a href="/san-pham?dm=@dm.Id@(string.IsNullOrWhiteSpace(q) ? "" : "&q=" + q)"
+                           class="lien-ket-loc @(dmChon == dm.Id ? "dang-chon" : "")">@dm.Icon @dm.Ten</a>
+                    }
+                </div>
+                <div class="nhom-loc">
+                    <h3>Khoảng giá</h3>
+                    <div class="khoang-gia">
+                        <input type="number" name="min" value="@ViewBag.Min" placeholder="Từ" min="0" />
+                        <span>—</span>
+                        <input type="number" name="max" value="@ViewBag.Max" placeholder="Đến" min="0" />
+                    </div>
+                    <input type="hidden" name="dm" value="@dmChon" />
+                    <button type="submit" class="nut-chinh nut-day-du">Áp dụng</button>
+                </div>
+            </form>
+        </aside>
+
+        <section>
+            <form method="get" action="/san-pham" class="thanh-sap-xep">
+                <input type="hidden" name="q" value="@q" />
+                @if (dmChon.HasValue) { <input type="hidden" name="dm" value="@dmChon" /> }
+                @if (ViewBag.Min != null) { <input type="hidden" name="min" value="@ViewBag.Min" /> }
+                @if (ViewBag.Max != null) { <input type="hidden" name="max" value="@ViewBag.Max" /> }
+                <label for="sapXep">Sắp xếp:</label>
+                <select id="sapXep" name="sapXep" onchange="this.form.submit()">
+                    <option value="newest" selected="@(sapXep == null || sapXep == "newest")">Mới nhất</option>
+                    <option value="ban-chay" selected="@(sapXep == "ban-chay")">Bán chạy</option>
+                    <option value="gia-tang" selected="@(sapXep == "gia-tang")">Giá tăng dần</option>
+                    <option value="gia-giam" selected="@(sapXep == "gia-giam")">Giá giảm dần</option>
+                </select>
+            </form>
+
+            @if (!Model.Any())
+            {
+                <div class="trong-trong">
+                    <div class="bieu-tuong-trong">🔍</div>
+                    <h3>Không tìm thấy sản phẩm</h3>
+                    <p>Thử bỏ bộ lọc hoặc tìm từ khóa khác.</p>
+                    <a href="/san-pham" class="nut-chinh">Xem tất cả</a>
+                </div>
+            }
+            else
+            {
+                <div class="luoi-san-pham">
+                    @foreach (var sp in Model) { <partial name="_TheSanPham" model="sp" /> }
+                </div>
+                @if ((int)(ViewBag.TongSoTrang ?? 1) > 1)
+                {
+                    <nav class="phan-trang" aria-label="Chọn trang sản phẩm">
+                        @if ((int)ViewBag.TrangHienTai > 1)
+                        {
+                            <a href="@Url.Action("Index", "SanPham", new { q, dm = dmChon, sapXep, min = ViewBag.Min, max = ViewBag.Max, trang = (int)ViewBag.TrangHienTai - 1 })">‹ Trước</a>
+                        }
+                        <span>Trang @ViewBag.TrangHienTai / @ViewBag.TongSoTrang</span>
+                        @if ((int)ViewBag.TrangHienTai < (int)ViewBag.TongSoTrang)
+                        {
+                            <a href="@Url.Action("Index", "SanPham", new { q, dm = dmChon, sapXep, min = ViewBag.Min, max = ViewBag.Max, trang = (int)ViewBag.TrangHienTai + 1 })">Sau ›</a>
+                        }
+                    </nav>
+                }
+            }
+        </section>
+    </div>
+</div>

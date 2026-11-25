@@ -1,0 +1,56 @@
+@model List<DonHang>
+@{ ViewBag.Title = "Quản lý đơn hàng"; var tt = ViewBag.TrangThai as string; }
+<div class="admin-panel">
+    <h3>Danh sách đơn hàng (@Model.Count)</h3>
+
+    <form method="get" class="hang-cot">
+        <input type="text" name="q" value="@ViewBag.Q" placeholder="Mã, tên, SĐT..." />
+        <select name="trangThai">
+            <option value="">Tất cả trạng thái</option>
+            @foreach (var t in TrangThaiDon.TatCa) { <option value="@t" selected="@(t == tt)">@TrangThaiDon.Ten(t)</option> }
+        </select>
+        <button type="submit" class="btn-primary">Lọc</button>
+    </form>
+
+    <div style="overflow-x:auto">
+        <table class="table-glass mt-3">
+            <thead><tr><th>Mã</th><th>Khách</th><th>SP</th><th>Tổng</th><th>Ghi chú</th><th>Thanh toán</th><th>Trạng thái</th><th>Đổi trạng thái</th></tr></thead>
+            <tbody>
+                @foreach (var d in Model)
+                {
+                    <tr>
+                        <td><strong>@d.MaDon</strong><br /><small class="phu">@TienIch.NgayGio(d.NgayTao)</small></td>
+                        <td>@d.HoTen<br /><small>@d.DienThoai</small></td>
+                        <td>@d.ChiTiet.Sum(x => x.SoLuong) món</td>
+                        <td><strong style="color:#15803d">@TienIch.Tien(d.TongTien)</strong></td>
+                        <td style="min-width:180px;max-width:280px;white-space:normal">@(string.IsNullOrWhiteSpace(d.GhiChu) ? "—" : d.GhiChu)</td>
+                        <td>
+                            @ThanhToan.Ten(d.ThanhToan)<br /><small>@PhuongThucThanhToan.Ten(d.PhuongThucThanhToan)</small>
+                            @if (d.ThanhToan != ThanhToan.DaThanhToan && d.TrangThai != TrangThaiDon.DaHuy
+                                && (d.PhuongThucThanhToan == PhuongThucThanhToan.ChuyenKhoan || d.TrangThai == TrangThaiDon.HoanThanh))
+                            {
+                                <form method="post" action="/quan-tri/don-hang/@d.Id/xac-nhan-thanh-toan" style="margin-top:6px">
+            @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-primary">Xác nhận đã thu</button>
+                                </form>
+                            }
+                        </td>
+                        <td><span class="badge-warning">@TrangThaiDon.Ten(d.TrangThai)</span></td>
+                        <td>
+                            @if (d.TrangThai != TrangThaiDon.DaHuy)
+                            {
+                                <form method="post" action="/quan-tri/don-hang/@d.Id/trang-thai">
+            @Html.AntiForgeryToken()
+                                    <select name="trangThai" onchange="this.form.submit()" style="background:#111;color:#fff;border:1px solid #333;padding:5px;border-radius:4px">
+                                        @foreach (var t in TrangThaiDon.TatCa) { <option value="@t" selected="@(t == d.TrangThai)">@TrangThaiDon.Ten(t)</option> }
+                                    </select>
+                                </form>
+                            }
+                            else { <span class="phu">Đã hủy</span> }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

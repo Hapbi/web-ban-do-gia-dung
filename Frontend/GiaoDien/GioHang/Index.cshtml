@@ -1,0 +1,78 @@
+@model List<DongGioHang>
+@{
+    var tong = Model.Sum(x => x.ThanhTien);
+    var coMatHangKhongDuTon = Model.Any(x => x.SanPham.TonKho < x.SoLuong || x.SanPham.TonKho <= 0);
+}
+<div class="khung phan" style="padding-top:100px">
+    <h1 class="tieu-de-trang">🛒 Giỏ hàng của bạn</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="trong-trong">
+            <div class="bieu-tuong-trong">🛒</div>
+            <h3>Giỏ hàng trống</h3>
+            <p>Hãy chọn cho mình sản phẩm ưng ý.</p>
+            <a href="/san-pham" class="nut-chinh nut-lon" data-nut-ripple>Mua sắm ngay →</a>
+        </div>
+    }
+    else
+    {
+        <div class="bo-cuc-gio-hang">
+            <div class="danh-sach-gio">
+                @foreach (var item in Model)
+                {
+                    <div class="dong-gio" data-san-pham-id="@item.SanPham.Id" data-gia="@item.SanPham.GiaHienTai">
+                        <img src="@(string.IsNullOrWhiteSpace(item.SanPham.AnhChinh) ? "/HinhAnh/anh-mac-dinh.svg" : item.SanPham.AnhChinh)"
+                             alt="@item.SanPham.Ten" onerror="this.onerror=null;this.src='/HinhAnh/anh-mac-dinh.svg'" />
+                        <div class="thong-tin-dong-gio">
+                            <a href="/san-pham/@item.SanPham.Id" class="ten-dong-gio">@item.SanPham.Ten</a>
+                            <div class="gia-dong-gio">@TienIch.Tien(item.SanPham.GiaHienTai)</div>
+                            @if (item.SanPham.TonKho <= 0)
+                            {
+                                <small class="badge-warning">Tạm hết hàng, hãy xóa khỏi giỏ</small>
+                            }
+                            else
+                            {
+                                <small class="phu">Còn @item.SanPham.TonKho sản phẩm</small>
+                                @if (item.SoLuong > item.SanPham.TonKho)
+                                {
+                                    <small class="badge-warning">Số lượng vượt tồn kho, hãy giảm xuống</small>
+                                }
+                            }
+                        </div>
+                        <div class="bo-dem-gio">
+                            <button type="button" data-hanh-dong="giam" data-id="@item.SanPham.Id">−</button>
+                            <input type="number" class="so-luong-gio" value="@item.SoLuong" data-id="@item.SanPham.Id" readonly />
+                            <button type="button" data-hanh-dong="tang" data-id="@item.SanPham.Id" disabled="@(item.SanPham.TonKho <= 0 || item.SoLuong >= item.SanPham.TonKho)">+</button>
+                        </div>
+                        <div class="thanh-tien-gio" data-thanh-tien>@TienIch.Tien(item.ThanhTien)</div>
+                        <form method="post" action="/gio-hang/xoa" class="bieu-mau-xoa">
+            @Html.AntiForgeryToken()
+                            <input type="hidden" name="sanPhamId" value="@item.SanPham.Id" />
+                            <button type="submit" class="nut-xoa" title="Xoá">🗑</button>
+                        </form>
+                    </div>
+                }
+                <form method="post" action="/gio-hang/xoa-het" class="bieu-mau-xoa-het">
+            @Html.AntiForgeryToken()
+                    <button type="submit" class="nut-phu">Xoá toàn bộ</button>
+                </form>
+            </div>
+
+            <aside class="tom-tat-gio">
+                <h2>Tóm tắt</h2>
+                <div class="dong-tom-tat"><span>Tạm tính</span><strong data-tong-tien>@TienIch.Tien(tong)</strong></div>
+                <div class="dong-tom-tat"><span>Phí ship</span><strong class="mau-thanh-cong">Miễn phí</strong></div>
+                <div class="dong-tom-tat tong"><span>Tổng</span><strong data-tong-tien>@TienIch.Tien(tong)</strong></div>
+                @if (coMatHangKhongDuTon)
+                {
+                    <button type="button" class="nut-chinh nut-lon nut-day-du" disabled>Hãy cập nhật giỏ hàng trước</button>
+                }
+                else
+                {
+                    <a href="/thanh-toan" class="nut-chinh nut-lon nut-day-du nut-thanh-toan" data-nut-ripple>Tiến hành thanh toán →</a>
+                }
+            </aside>
+        </div>
+    }
+</div>

@@ -1,0 +1,160 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = GIADUNGCHATLUONG
+build_property.RootNamespace = GIADUNGCHATLUONG
+build_property.ProjectDir = D:\0.rác\banwebchot\GIADUNGCHATLUONG\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\0.rác\banwebchot\GIADUNGCHATLUONG
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/Chung/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cQ2h1bmdcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/Chung/_TheSanPham.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cQ2h1bmdcX1RoZVNhblBoYW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/DonHang/ChiTiet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cRG9uSGFuZ1xDaGlUaWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/DonHang/CuaToi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cRG9uSGFuZ1xDdWFUb2kuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/DonHang/ThanhToan.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cRG9uSGFuZ1xUaGFuaFRvYW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/GioHang/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cR2lvSGFuZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/BaiViet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxCYWlWaWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/Banner.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxCYW5uZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/CauHinh.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxDYXVIaW5oLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/DanhGia.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxEYW5oR2lhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/DanhMuc.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxEYW5oTXVjLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/DonHang.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxEb25IYW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/KhoHang.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxLaG9IYW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/LienHe.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxMaWVuSGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/NguoiDung.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxOZ3VvaUR1bmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/NhatKy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxOaGF0S3kuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/NhatKyChiTiet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxOaGF0S3lDaGlUaWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/PhanQuyen.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxQaGFuUXV5ZW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/SanPham.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxTYW5QaGFtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/SuaBaiViet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxTdWFCYWlWaWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/SuaSanPham.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxTdWFTYW5QaGFtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/QuanTri/ThongKe.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cUXVhblRyaVxUaG9uZ0tlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/SanPham/ChiTiet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cU2FuUGhhbVxDaGlUaWV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/SanPham/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cU2FuUGhhbVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/SanPham/YeuThichCuaToi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cU2FuUGhhbVxZZXVUaGljaEN1YVRvaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TaiKhoan/DangKy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVGFpS2hvYW5cRGFuZ0t5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TaiKhoan/DangNhap.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVGFpS2hvYW5cRGFuZ05oYXAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TaiKhoan/DoiMatKhau.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVGFpS2hvYW5cRG9pTWF0S2hhdS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TrangChu/BangXepHang.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVHJhbmdDaHVcQmFuZ1hlcEhhbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TrangChu/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVHJhbmdDaHVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/TrangChu/LienHe.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cVHJhbmdDaHVcTGllbkhlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/0.rác/banwebchot/GIADUNGCHATLUONG/Frontend/GiaoDien/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = RnJvbnRlbmRcR2lhb0RpZW5cX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,118 @@
+@model SanPham
+@{
+    ViewBag.Title = Model.Id == 0 ? "Thêm sản phẩm" : "Sửa sản phẩm";
+    var danhMucs = ViewBag.DanhMucs as List<DanhMuc> ?? new();
+}
+<div class="admin-panel">
+    <h3>@ViewBag.Title</h3>
+    <form method="post" action="/quan-tri/san-pham/luu" enctype="multipart/form-data" style="margin-top:20px">
+            @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div style="margin-bottom:15px">
+            <label style="color:#aaa;display:block;margin-bottom:5px">Tên sản phẩm *</label>
+            <input name="Ten" value="@Model.Ten" required maxlength="200" class="form-input" />
+        </div>
+
+        <div style="margin-bottom:15px">
+            <label style="color:#aaa;display:block;margin-bottom:5px">Danh mục *</label>
+            <select id="DanhMucId" name="DanhMucId" required class="form-input">
+                @foreach (var dm in danhMucs)
+                {
+                    <option value="@dm.Id" selected="@(dm.Id == Model.DanhMucId)" data-goi-y="@string.Join("|", ThongTinSanPhamHelper.LayTruongThongSoGoiY(dm.Ten))">@dm.Icon @dm.Ten</option>
+                }
+            </select>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+            <div>
+                <label style="color:#aaa;display:block;margin-bottom:5px">Giá gốc (VNĐ) *</label>
+                <input type="number" name="GiaGoc" value="@((long)Model.GiaGoc)" min="1" required class="form-input" />
+            </div>
+            <div>
+                <label style="color:#aaa;display:block;margin-bottom:5px">Giá khuyến mãi (để trống nếu không giảm)</label>
+                <input type="number" name="GiaKhuyenMai" value="@((Model.GiaKhuyenMai.HasValue) ? ((long)Model.GiaKhuyenMai.Value).ToString() : "")" min="0" class="form-input" />
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px">
+            <div>
+                <label style="color:#aaa;display:block;margin-bottom:5px">Tồn kho *</label>
+                <input type="number" name="TonKho" value="@Model.TonKho" min="0" required class="form-input" />
+            </div>
+            <div>
+                <label style="color:#aaa;display:block;margin-bottom:5px">Đã bán (tự tăng)</label>
+                <input type="number" name="DaBan" value="@Model.DaBan" min="0" readonly class="form-input" />
+            </div>
+        </div>
+
+        <div style="margin-bottom:15px">
+            <label style="color:#aaa;display:block;margin-bottom:5px">Link ảnh (hoặc tải file bên dưới)</label>
+            <input name="AnhChinh" value="@Model.AnhChinh" class="form-input" placeholder="https://..." />
+        </div>
+
+        <div style="margin-bottom:15px">
+            <label style="color:#aaa;display:block;margin-bottom:5px">Tải ảnh từ máy (JPG/PNG/WEBP/GIF, max 5MB)</label>
+            <input type="file" name="anhFile" accept=".jpg,.jpeg,.png,.webp,.gif" class="form-input" />
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.AnhChinh))
+        {
+            <div style="margin:14px 0;padding:12px;background:#0a0a0a;border-radius:10px">
+                <div class="phu" style="margin-bottom:8px">Ảnh hiện tại:</div>
+                <img src="@Model.AnhChinh" alt="" style="max-width:200px;max-height:200px;border-radius:8px" onerror="this.style.display='none'" />
+            </div>
+        }
+
+        <div class="nhom-mo-ta-san-pham">
+            <h4>📝 Nội dung giới thiệu</h4>
+            <div class="luoi-truong-mo-ta">
+                <div class="truong-rong">
+                    <label for="MoTa">Mô tả tổng quan</label>
+                    <textarea id="MoTa" name="MoTa" rows="4" class="form-input" placeholder="Giới thiệu chất liệu, thiết kế, trải nghiệm và điểm cần biết...">@Model.MoTa</textarea>
+                </div>
+                <div>
+                    <label for="CongDungChinh">Công dụng chính</label>
+                    <textarea id="CongDungChinh" name="CongDungChinh" rows="3" class="form-input" placeholder="Sản phẩm giúp người dùng làm được việc gì?">@Model.CongDungChinh</textarea>
+                </div>
+                <div>
+                    <label for="DoiTuongSuDung">Đối tượng phù hợp</label>
+                    <textarea id="DoiTuongSuDung" name="DoiTuongSuDung" rows="3" class="form-input" placeholder="Gia đình bao nhiêu người, phòng nào, nhu cầu nào...?">@Model.DoiTuongSuDung</textarea>
+                </div>
+                <div>
+                    <label for="TinhNangNoiBat">Tính năng nổi bật</label>
+                    <textarea id="TinhNangNoiBat" name="TinhNangNoiBat" rows="3" class="form-input" placeholder="Chỉ ghi tính năng có thật theo thông tin sản phẩm...">@Model.TinhNangNoiBat</textarea>
+                </div>
+                <div>
+                    <label for="LuuYSuDung">Lưu ý khi sử dụng</label>
+                    <textarea id="LuuYSuDung" name="LuuYSuDung" rows="3" class="form-input" placeholder="Lưu ý vệ sinh, nguồn điện, bảo quản hoặc an toàn...">@Model.LuuYSuDung</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="nhom-thong-so-san-pham">
+            <div class="dau-nhom-thong-so">
+                <div><h4>⚙️ Thông số kỹ thuật</h4><p>Chọn danh mục để hiện gợi ý đúng loại hàng. Có thể thêm hoặc bỏ bất kỳ trường nào.</p></div>
+            </div>
+            <div id="goiYThongSo" class="goi-y-thong-so" aria-label="Gợi ý thông số theo danh mục"></div>
+            <label for="ThongSo">Thông số của mặt hàng (mỗi dòng một thông số: Tên: Giá trị)</label>
+            <textarea id="ThongSo" name="ThongSo" rows="7" class="form-input" placeholder="Ví dụ:
+Dung tích: 1.8L
+Công suất: 700W
+Chất liệu: ...">@Model.ThongSo</textarea>
+            <small class="ghi-chu-thong-so">Không có thông số nào bắt buộc cho tất cả sản phẩm. Chỉ nhập dữ liệu được nhà sản xuất hoặc nhà cung cấp xác nhận.</small>
+        </div>
+
+        <div style="display:flex;gap:20px;margin-bottom:20px">
+            <label class="hop-checkbox"><input type="checkbox" name="DangBan" value="true" checked="@Model.DangBan" /><span>Đang bán</span></label>
+            <label class="hop-checkbox"><input type="checkbox" name="NoiBat" value="true" checked="@Model.NoiBat" /><span>Nổi bật</span></label>
+        </div>
+
+        <button type="submit" class="btn-primary" style="padding:12px 30px">Lưu sản phẩm</button>
+        <a href="/quan-tri/san-pham" style="color:#aaa;margin-left:15px">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/JS/quan-ly-thong-so.js" asp-append-version="true"></script>
+}

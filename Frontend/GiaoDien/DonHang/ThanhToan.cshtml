@@ -1,0 +1,119 @@
+@model ThanhToanInput
+@{
+    var gioHang = ViewBag.GioHang as List<DongGioHang> ?? new();
+    var tong = gioHang.Sum(x => x.ThanhTien);
+    var tongSoLuong = gioHang.Sum(x => x.SoLuong);
+    var cauHinh = ViewBag.CauHinh as CauHinh;
+    var hienThongTinChuyenKhoan = Model.PhuongThuc == PhuongThucThanhToan.ChuyenKhoan;
+}
+<div class="khung phan trang-thanh-toan">
+    <div class="dau-thanh-toan">
+        <a href="/gio-hang" class="nut-quay-lai">← Quay lại giỏ hàng</a>
+        <h1 class="tieu-de-trang">Xác nhận đơn hàng</h1>
+        <p class="phu">Kiểm tra thông tin giao hàng và sản phẩm trước khi đặt đơn.</p>
+    </div>
+
+    <div class="canh-bao-demo" role="note">
+        <strong>Website thử nghiệm – chỉ mang tính chất minh họa.</strong>
+        <span>Đơn hàng và các phương thức thanh toán trên website không tạo giao dịch thật. Anh/chị không chuyển tiền vào tài khoản hiển thị ở đây.</span>
+    </div>
+
+    <form method="post" action="/thanh-toan" class="bo-cuc-thanh-toan" id="formThanhToan">
+            @Html.AntiForgeryToken()
+        <div class="bieu-mau-thanh-toan">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+            <h2>Thông tin giao hàng</h2>
+            <div class="hang-2">
+                <div>
+                    <label asp-for="HoTen">Họ và tên <span class="bat-buoc">*</span></label>
+                    <input asp-for="HoTen" autocomplete="name" maxlength="120" placeholder="Nhập họ và tên người nhận" />
+                    <span asp-validation-for="HoTen" class="validation-message"></span>
+                </div>
+                <div>
+                    <label asp-for="DienThoai">Số điện thoại <span class="bat-buoc">*</span></label>
+                    <input asp-for="DienThoai" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="Ví dụ: 0912345678" />
+                    <span asp-validation-for="DienThoai" class="validation-message"></span>
+                </div>
+            </div>
+
+            <label asp-for="DiaChi">Địa chỉ nhận hàng <span class="bat-buoc">*</span></label>
+            <textarea asp-for="DiaChi" rows="3" maxlength="500" autocomplete="street-address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+            <span asp-validation-for="DiaChi" class="validation-message"></span>
+
+            <label asp-for="GhiChu">Ghi chú đơn hàng <span class="bat-buoc">* Bắt buộc</span></label>
+            <textarea asp-for="GhiChu" rows="3" maxlength="500" required placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao. Nếu không có yêu cầu, nhập: Không có"></textarea>
+            <div class="goi-y-ghi-chu">Bắt buộc nhập ghi chú để hoàn tất đặt hàng. Có thể ghi “Không có” nếu anh/chị không có yêu cầu thêm (tối đa 500 ký tự).</div>
+            <span asp-validation-for="GhiChu" class="validation-message"></span>
+
+            <h2 class="tieu-de-phuong-thuc">Phương thức thanh toán</h2>
+            <label class="lua-chon-thanh-toan">
+                <input asp-for="PhuongThuc" type="radio" value="COD" />
+                <span>💵 Thanh toán khi nhận hàng (COD)</span>
+            </label>
+            <label class="lua-chon-thanh-toan">
+                <input asp-for="PhuongThuc" type="radio" value="ChuyenKhoan" />
+                <span>🏦 Chuyển khoản ngân hàng (minh họa)</span>
+            </label>
+            <span asp-validation-for="PhuongThuc" class="validation-message"></span>
+
+            @if (cauHinh != null && !string.IsNullOrWhiteSpace(cauHinh.SoTaiKhoan))
+            {
+                <div class="khung-ngan-hang" id="thongTinChuyenKhoan" style="@(hienThongTinChuyenKhoan ? "" : "display:none")">
+                    <h3>Thông tin chuyển khoản mẫu</h3>
+                    <p><strong>Ngân hàng:</strong> @cauHinh.NganHang</p>
+                    <p><strong>Số tài khoản:</strong> @cauHinh.SoTaiKhoan</p>
+                    <p><strong>Chủ tài khoản:</strong> @cauHinh.ChuTaiKhoan</p>
+                    <p class="canh-bao-khong-chuyen">Thông tin trên chỉ để minh họa giao diện. Tuyệt đối không thực hiện chuyển khoản thật.</p>
+                </div>
+            }
+        </div>
+
+        <aside class="tom-tat-thanh-toan">
+            <h2>Đơn hàng (@tongSoLuong sản phẩm)</h2>
+            @foreach (var item in gioHang)
+            {
+                <div class="dong-tom-tat-thanh-toan">
+                    <img src="@(string.IsNullOrWhiteSpace(item.SanPham.AnhChinh) ? "/HinhAnh/anh-mac-dinh.svg" : item.SanPham.AnhChinh)"
+                         alt="@item.SanPham.Ten" onerror="this.onerror=null;this.src='/HinhAnh/anh-mac-dinh.svg'" />
+                    <div class="chi-tiet-tom-tat">
+                        <div>@item.SanPham.Ten × @item.SoLuong</div>
+                        <div class="gia-tom-tat">@TienIch.Tien(item.ThanhTien)</div>
+                    </div>
+                </div>
+            }
+            <div class="dong-tom-tat"><span>Tạm tính</span><strong>@TienIch.Tien(tong)</strong></div>
+            <div class="dong-tom-tat"><span>Phí vận chuyển</span><strong class="mau-thanh-cong">Miễn phí</strong></div>
+            <div class="dong-tom-tat tong"><span>Tổng thanh toán</span><strong>@TienIch.Tien(tong)</strong></div>
+            <button type="submit" class="nut-chinh nut-lon nut-day-du" id="nutDatHang" data-nut-ripple>Xác nhận đặt hàng</button>
+            <p class="xac-nhan-demo">Khi bấm đặt hàng, hệ thống chỉ ghi nhận một đơn thử nghiệm. Không phát sinh thanh toán thật.</p>
+        </aside>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('formThanhToan');
+            const nut = document.getElementById('nutDatHang');
+            const thongTin = document.getElementById('thongTinChuyenKhoan');
+            const radios = document.querySelectorAll('input[name="PhuongThuc"]');
+
+            function capNhatPhuongThuc() {
+                if (!thongTin) return;
+                const chuyenKhoan = document.querySelector('input[name="PhuongThuc"]:checked')?.value === 'ChuyenKhoan';
+                thongTin.style.display = chuyenKhoan ? '' : 'none';
+            }
+            radios.forEach(radio => radio.addEventListener('change', capNhatPhuongThuc));
+            capNhatPhuongThuc();
+
+            if (form && nut) {
+                form.addEventListener('submit', function () {
+                    if (!form.checkValidity()) return;
+                    nut.disabled = true;
+                    nut.textContent = 'Đang ghi nhận đơn hàng…';
+                });
+            }
+        })();
+    </script>
+}

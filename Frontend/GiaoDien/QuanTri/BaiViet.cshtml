@@ -1,0 +1,33 @@
+@model List<BaiViet>
+@{ ViewBag.Title = "Quản lý bài viết"; }
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3>Danh sách bài viết (@Model.Count)</h3>
+        <a href="/quan-tri/bai-viet/sua" class="btn-primary">+ Viết bài mới</a>
+    </div>
+    <table class="table-glass mt-3">
+        <thead><tr><th>Tiêu đề</th><th>Tác giả</th><th>Ngày</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody>
+            @foreach (var bv in Model)
+            {
+                <tr>
+                    <td><strong>@bv.TieuDe</strong></td>
+                    <td>@bv.TacGia</td>
+                    <td>@TienIch.Ngay(bv.NgayTao)</td>
+                    <td>@if (bv.DaDang) { <span class="badge-success">Đã đăng</span> } else { <span class="badge-warning">Nháp</span> }</td>
+                    <td style="white-space:nowrap">
+                        <a href="/quan-tri/bai-viet/sua/@bv.Id" class="btn-primary" style="padding:6px 12px;font-size:12px">Sửa</a>
+                        <form method="post" action="/quan-tri/bai-viet/@bv.Id/doi-trang-thai" style="display:inline">
+            @Html.AntiForgeryToken()
+                            <button type="submit" class="nut-phu" style="padding:6px 12px;font-size:12px">@(bv.DaDang ? "Ẩn" : "Đăng")</button>
+                        </form>
+                        <form method="post" action="/quan-tri/bai-viet/@bv.Id/xoa" style="display:inline" onsubmit="return confirm('Xóa bài viết?')">
+            @Html.AntiForgeryToken()
+                            <button type="submit" class="nut-nguy-hiem" style="padding:6px 12px;font-size:12px">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,65 @@
+@model List<NguoiDung>
+@{ ViewBag.Title = "Người dùng & phân quyền"; }
+<div class="admin-panel">
+    <div class="panel-header"><div><h3>Thêm nhân sự</h3><p class="phu">Admin lớn tạo nhân viên hoặc Admin phụ, sau đó cấp đúng các quyền cần thiết.</p></div></div>
+    <form method="post" action="/quan-tri/nguoi-dung/them-nhan-vien" class="form-grid-admin" style="margin-top:15px">
+        @Html.AntiForgeryToken()
+        <div><label>Họ tên</label><input name="hoTen" required placeholder="Họ và tên" /></div>
+        <div><label>Email đăng nhập</label><input type="email" name="email" required placeholder="ten@example.com" /></div>
+        <div><label>Mật khẩu</label><input type="password" name="matKhau" required minlength="8" placeholder="Tối thiểu 8 ký tự" /></div>
+        <div><label>Vai trò</label><select name="vaiTro"><option value="NhanVien">Nhân viên</option><option value="AdminPhu">Admin phụ</option></select></div>
+        <div class="span-all"><label>Quyền được cấp</label><div class="permission-grid">
+            @foreach (var q in QuyenHelper.TatCa) { <label class="permission-choice"><input type="checkbox" name="quyen" value="@q.Ma" checked="@(new[] { "donhang", "kho" }.Contains(q.Ma))" /> <span>@q.Ten</span></label> }
+        </div></div>
+        <div class="span-all"><button type="submit" class="btn-primary">+ Tạo tài khoản</button></div>
+    </form>
+</div>
+
+<div class="admin-panel mt-4">
+    <div class="panel-header"><div><h3>Danh sách tài khoản (@Model.Count)</h3><p class="phu">Admin lớn là tài khoản toàn quyền. Admin phụ có thể bị Admin lớn hạ cấp hoặc khóa bất cứ lúc nào.</p></div></div>
+    <form method="get" class="hang-cot search-admin">
+        <input name="q" value="@ViewBag.Q" placeholder="Tìm theo tên hoặc email" />
+        <select name="vaiTro"><option value="">Tất cả vai trò</option><option value="Admin" selected="@(ViewBag.VaiTro as string == "Admin")">Admin lớn</option><option value="AdminPhu" selected="@(ViewBag.VaiTro as string == "AdminPhu")">Admin phụ</option><option value="NhanVien" selected="@(ViewBag.VaiTro as string == "NhanVien")">Nhân viên</option><option value="KhachHang" selected="@(ViewBag.VaiTro as string == "KhachHang")">Khách hàng</option></select>
+        <button class="btn-primary" type="submit">Lọc</button>
+    </form>
+    <div class="table-responsive mt-3"><table class="table-glass"><thead><tr><th>Họ tên</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Quyền</th><th>Thao tác</th></tr></thead><tbody>
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td><strong>@u.HoTen</strong><div class="phu">#@u.Id · @u.DienThoai</div></td>
+            <td>@u.Email</td>
+            <td>
+                @if (u.VaiTro == VaiTro.Admin) { <span class="role-pill role-super">Admin lớn</span> }
+                else {
+                    <form method="post" action="/quan-tri/nguoi-dung/@u.Id/vai-tro" class="inline-form">
+                        @Html.AntiForgeryToken()
+                        <select name="vaiTro" aria-label="Vai trò" onchange="this.form.submit()">
+                            <option value="AdminPhu" selected="@(u.VaiTro == VaiTro.AdminPhu)">Admin phụ</option>
+                            <option value="NhanVien" selected="@(u.VaiTro == VaiTro.NhanVien)">Nhân viên</option>
+                            <option value="KhachHang" selected="@(u.VaiTro == VaiTro.KhachHang)">Khách hàng</option>
+                        </select>
+                    </form>
+                }
+            </td>
+            <td>@if (u.BiKhoa) { <span class="status-pill status-off">Đã khóa</span> } else { <span class="status-pill status-on">Hoạt động</span> }</td>
+            <td>
+                @if (u.VaiTro is VaiTro.NhanVien or VaiTro.AdminPhu) {
+                    var soQuyen = QuyenHelper.HieuLuc(u.VaiTro, u.Quyen).Length;
+                    <a href="/quan-tri/nguoi-dung/@u.Id/phan-quyen" class="btn-primary btn-small">🔐 @soQuyen/@QuyenHelper.TatCa.Length</a>
+                } else if (u.VaiTro == VaiTro.Admin) { <span class="phu">Toàn quyền</span> }
+                else { <span class="phu">Không có quyền quản trị</span> }
+            </td>
+            <td><div class="hang-thao-tac">
+                @if (u.VaiTro != VaiTro.Admin || u.Id != TienIch.LayIdNguoiDung(User)) {
+                    <form method="post" action="/quan-tri/nguoi-dung/@u.Id/khoa" onsubmit="return confirm('@(u.BiKhoa ? "Mở khóa" : "Khóa") tài khoản này?')">
+                        @Html.AntiForgeryToken()<button type="submit" class="nut-phu">@(u.BiKhoa ? "Mở khóa" : "Khóa")</button>
+                    </form>
+                }
+                <form method="post" action="/quan-tri/nguoi-dung/@u.Id/dat-lai-mk" class="inline-form">
+                    @Html.AntiForgeryToken()<input name="matKhauMoi" required minlength="8" type="password" placeholder="Mật khẩu mới" class="password-short" /><button type="submit" class="nut-phu">Đặt lại</button>
+                </form>
+            </div></td>
+        </tr>
+    }
+    </tbody></table></div>
+</div>

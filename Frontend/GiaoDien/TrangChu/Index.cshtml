@@ -1,0 +1,167 @@
+@using GIADUNGCHATLUONG.MoHinh
+@{
+    var banners = ViewBag.Banners as List<Banner> ?? new();
+    var danhMucs = ViewBag.DanhMucs as List<DanhMuc> ?? new();
+    var noiBat = ViewBag.SanPhamNoiBat as List<SanPham> ?? new();
+    var sanPhamMoi = ViewBag.SanPhamMoi as List<SanPham> ?? new();
+    var banChay = ViewBag.SanPhamBanChay as List<SanPham> ?? new();
+    var list37 = ViewBag.List37 as List<string> ?? new();
+}
+
+<!-- 3D HERO RING CAROUSEL -->
+<section class="hero-3d" data-home-section="hero">
+    <div class="bg-image"></div>
+    <div class="hero-canvas">
+        <div class="stars" id="stA"></div>
+        <div class="stars" id="stB"></div>
+
+        <!-- Dùng header chung của website để tránh hai thanh điều hướng chồng lên nhau. -->
+
+        <div class="hero-badge">
+            <i>⚡</i>
+            <b>GIADUNGCHATLUONG · Tiện nghi cho mọi nhà</b>
+        </div>
+
+        <div class="hero-h1" id="h1a">Đồ gia dụng</div>
+        <div class="hero-h1" id="h1b">cho mọi nhà</div>
+        <div class="hero-sub">Trang bị tiện nghi — Nâng tầm sống — Ưu đãi mỗi ngày</div>
+
+        <a href="/san-pham" class="btn-cta-hero"><span>Khám phá</span></a>
+
+        <div class="showcase">
+            <div class="ring" id="ring"></div>
+        </div>
+
+        <!-- Browser mockup -->
+        <div class="browser-mock">
+            <div class="bar">
+                <div class="dots"><i></i><i></i><i></i></div>
+                <div class="omni"><span>GIADUNGCHATLUONG · Cửa hàng gia dụng</span></div>
+            </div>
+            <div class="page-mock">
+                <div class="ann"><span>Miễn phí vận chuyển cho đơn từ 500.000đ</span></div>
+                <div class="shoplogo-mock">
+                    <em>GIADUNGCHATLUONG</em><i>ĐỒ GIA DỤNG VÀ TIỆN ÍCH</i>
+                </div>
+                <div class="page-body-mock">
+                    <div class="pg-hero">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800" alt="">
+                        <div class="pg-copy"><u>Bộ sưu tập mới</u><em>Nâng tầm không gian sống</em></div>
+                    </div>
+                    <div class="pg-sec"><b>Sản phẩm nổi bật</b><u>xem thêm</u></div>
+                    <div class="pg-grid">
+                        @for (int i = 0; i < 4 && i < noiBat.Count; i++)
+                        {
+                            var sp = noiBat[i];
+                            <div class="pg-card">
+                                <div class="ph"><img src="@sp.AnhChinh" alt=""></div>
+                                <b>@sp.Ten</b>
+                                <s>@TienIch.Tien(sp.GiaHienTai)</s>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (banners.Any())
+{
+    <section class="promotion-section" aria-label="Ưu đãi cửa hàng" data-home-section="banner">
+        <div class="promotion-heading"><div><span>ƯU ĐÃI ĐANG DIỄN RA</span><h2>Điểm nhấn dành cho ngôi nhà bạn</h2></div><div class="promotion-controls"><button type="button" id="promoPrev" aria-label="Banner trước">←</button><button type="button" id="promoNext" aria-label="Banner tiếp">→</button></div></div>
+        <div class="promotion-track" id="promotionTrack">
+            @foreach (var b in banners.Where(x => x.DangHienThi).OrderBy(x => x.ThuTu))
+            {
+                <a class="promotion-card" href="@(string.IsNullOrWhiteSpace(b.LienKet) ? "/san-pham" : b.LienKet)">
+                    <img src="@b.AnhUrl" alt="@b.TieuDe" loading="lazy" onerror="this.src='/HinhAnh/anh-mac-dinh.svg'" />
+                    <span>@b.TieuDe</span><b>Khám phá ưu đãi <i>→</i></b>
+                </a>
+            }
+        </div>
+    </section>
+}
+
+<!-- SẢN PHẨM (scroll lên trên hero) -->
+<section class="product-section" data-home-section="danhmuc">
+    <div class="khung">
+        <div class="dau-phan"><h2>Danh mục sản phẩm</h2><a href="/san-pham">Xem tất cả →</a></div>
+        <div class="luoi-danh-muc">
+            @foreach (var dm in danhMucs)
+            {
+                <a href="/san-pham?dm=@dm.Id" class="the-danh-muc">
+                    <div class="bieu-tuong-dm">@dm.Icon</div>
+                    <div class="ten-dm">@dm.Ten</div>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@if (banChay.Any())
+{
+    <section class="product-section" data-home-section="banchay">
+        <div class="khung">
+            <div class="dau-phan"><h2>🔥 Bán chạy nhất</h2><a href="/san-pham?sapXep=ban-chay">Xem tất cả →</a></div>
+            <div class="luoi-san-pham">
+                @foreach (var sp in banChay) { <partial name="_TheSanPham" model="sp" /> }
+            </div>
+        </div>
+    </section>
+}
+
+@if (sanPhamMoi.Any())
+{
+    <section class="product-section" data-home-section="moimua">
+        <div class="khung">
+            <div class="dau-phan"><h2>🆕 Sản phẩm mới</h2><a href="/san-pham">Xem tất cả →</a></div>
+            <div class="luoi-san-pham">
+                @foreach (var sp in sanPhamMoi) { <partial name="_TheSanPham" model="sp" /> }
+            </div>
+        </div>
+    </section>
+}
+
+@if (noiBat.Any())
+{
+    <section class="product-section" data-home-section="noibat">
+        <div class="khung">
+            <div class="dau-phan"><h2>⭐ Sản phẩm nổi bật</h2><a href="/san-pham">Xem tất cả →</a></div>
+            <div class="luoi-san-pham">
+                @foreach (var sp in noiBat) { <partial name="_TheSanPham" model="sp" /> }
+            </div>
+        </div>
+    </section>
+}
+
+<section class="product-section" data-home-section="xephang">
+    <div class="khung ranking-teaser">
+        <div><span class="eyebrow">ĐẶC QUYỀN THÀNH VIÊN</span><h2>🏆 Mua sắm – tích điểm – nhận quà</h2><p>Khách hàng có tổng chi tiêu cao sẽ xuất hiện trên bảng xếp hạng và nhận phần quà tri ân.</p></div>
+        <a href="/bang-xep-hang" class="btn-primary">Xem bảng xếp hạng →</a>
+    </div>
+</section>
+
+<section class="product-section" data-home-section="ket">
+    <div class="khung">
+        <div class="khung-ket">
+            <h2>Sẵn sàng mua sắm?</h2>
+            <p>Hàng chục ngàn sản phẩm gia dụng chất lượng, giá tốt mỗi ngày.</p>
+            <a href="/san-pham" class="nut-chinh nut-lon">Bắt đầu mua sắm →</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const listImg = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(list37));
+    </script>
+    <script src="~/JS/dau-trang.js" asp-append-version="true"></script>
+    <script>
+    (() => {
+      const track=document.getElementById('promotionTrack'); if(!track)return;
+      const scroll=dir=>track.scrollBy({left:dir*Math.max(260,track.clientWidth*.75),behavior:'smooth'});
+      document.getElementById('promoPrev')?.addEventListener('click',()=>scroll(-1));
+      document.getElementById('promoNext')?.addEventListener('click',()=>scroll(1));
+    })();
+    </script>
+}

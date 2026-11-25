@@ -1,0 +1,25 @@
+@model BaiViet
+@{ ViewBag.Title = Model.Id == 0 ? "Viết bài mới" : "Sửa bài viết"; }
+<div class="admin-panel">
+    <a href="/quan-tri/bai-viet" class="phu">← Danh sách bài viết</a>
+    <h3 style="margin-top:10px">@ViewBag.Title</h3>
+    <form method="post" action="/quan-tri/bai-viet/luu" style="margin-top:20px">
+            @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <label style="color:#aaa;display:block;margin-bottom:5px">Tiêu đề *</label>
+        <input name="TieuDe" value="@Model.TieuDe" required class="form-input" />
+        <label style="color:#aaa;display:block;margin:10px 0 5px">Tóm tắt</label>
+        <textarea name="TomTat" rows="2" class="form-input">@Model.TomTat</textarea>
+        <label style="color:#aaa;display:block;margin:10px 0 5px">Nội dung</label>
+        <textarea name="NoiDung" rows="12" class="form-input">@Model.NoiDung</textarea>
+        <label style="color:#aaa;display:block;margin:10px 0 5px">Link ảnh bìa</label>
+        <input name="AnhBia" value="@Model.AnhBia" class="form-input" placeholder="https://..." />
+        <label class="hop-checkbox" style="margin-top:14px">
+            <input type="checkbox" name="DaDang" value="true" checked="@Model.DaDang" /><span>Đăng công khai</span>
+        </label>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+            <a href="/quan-tri/bai-viet" class="nut-phu">Hủy</a>
+            <button type="submit" class="btn-primary">Lưu bài viết</button>
+        </div>
+    </form>
+</div>

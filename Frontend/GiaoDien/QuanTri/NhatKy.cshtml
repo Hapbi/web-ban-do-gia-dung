@@ -1,0 +1,19 @@
+@model List<NhatKy>
+@{ ViewBag.Title = "Nhật ký nghiệp vụ"; }
+<div class="admin-panel log-page">
+    <div class="panel-header"><div><span class="eyebrow">THEO DÕI HOẠT ĐỘNG QUAN TRỌNG</span><h3>📌 Nhật ký nghiệp vụ</h3><p class="phu">Chỉ hiển thị các việc có ý nghĩa: mua hàng, đổi giỏ, đánh giá, đổi mật khẩu, phân quyền, cập nhật sản phẩm và cấu hình. Không liệt kê từng lần mở trang.</p></div><span class="log-count">@Model.Count bản ghi hiển thị</span></div>
+    <div class="log-tabs"><a class="active" href="/quan-tri/nhat-ky">📌 Nghiệp vụ <b>@ViewBag.TongBanGhi</b></a><a href="/quan-tri/nhat-ky-theo-nguoi">👤 Theo từng người</a><a href="/quan-tri/nhat-ky-chi-tiet">🔎 Chi tiết <b>@ViewBag.TongChiTiet</b></a></div>
+    <form method="get" class="hang-cot search-admin log-filter">
+        <input type="text" name="q" value="@ViewBag.Q" placeholder="Tìm người, hành động, đơn hàng..." />
+        <select name="loai" class="form-input"><option value="">Tất cả nhóm hoạt động</option><option value="Mua sắm" selected="@(ViewBag.Loai as string == "Mua sắm")">Mua sắm</option><option value="Đơn hàng" selected="@(ViewBag.Loai as string == "Đơn hàng")">Đơn hàng</option><option value="Tài khoản & quyền" selected="@(ViewBag.Loai as string == "Tài khoản & quyền")">Tài khoản & quyền</option><option value="Giao diện" selected="@(ViewBag.Loai as string == "Giao diện")">Giao diện</option><option value="Quản trị" selected="@(ViewBag.Loai as string == "Quản trị")">Quản trị</option><option value="Khách hàng" selected="@(ViewBag.Loai as string == "Khách hàng")">Khách hàng</option><option value="Nội dung" selected="@(ViewBag.Loai as string == "Nội dung")">Nội dung</option><option value="Chăm sóc khách hàng" selected="@(ViewBag.Loai as string == "Chăm sóc khách hàng")">Chăm sóc khách hàng</option><option value="Tài khoản & bảo mật" selected="@(ViewBag.Loai as string == "Tài khoản & bảo mật")">Tài khoản & bảo mật</option><option value="Xác thực" selected="@(ViewBag.Loai as string == "Xác thực")">Đăng nhập / bảo mật</option></select>
+        <button type="submit" class="btn-primary">Lọc nhật ký</button><a class="nut-phu" href="/quan-tri/nhat-ky">Xóa lọc</a>
+    </form>
+    <div class="log-note"><span>✓</span><div><strong>Nhật ký tổng quan</strong><small>Các hành động chi tiết vẫn được lưu riêng. Bản tổng quan chỉ ghi khi có sự kiện nghiệp vụ quan trọng.</small></div></div>
+    <div class="table-responsive mt-3"><table class="table-glass log-table"><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Vai trò</th><th>Hoạt động chính</th><th>Kết quả</th><th>Thông tin liên quan</th></tr></thead><tbody>
+    @foreach (var nk in Model)
+    {
+        <tr><td class="log-time">@nk.ThoiGian.ToString("dd/MM/yyyy HH:mm:ss")</td><td><strong>@nk.NguoiDung</strong><small class="phu">@(nk.NguoiDungId.HasValue ? "Tài khoản #" + nk.NguoiDungId : "Khách chưa đăng nhập")</small></td><td><span class="role-pill">@(string.IsNullOrWhiteSpace(nk.VaiTro) ? "Khách" : VaiTro.Ten(nk.VaiTro))</span></td><td><strong>@nk.HanhDong</strong><small class="phu">@nk.Loai</small></td><td><span class="status-pill @(nk.KetQua == "Thành công" ? "status-on" : "status-warn")">@nk.KetQua</span></td><td><div>@nk.ChiTiet</div><small class="phu">@nk.TraceId</small></td></tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="6" class="empty-ranking">Chưa có hoạt động nghiệp vụ phù hợp. Các lượt truy cập thông thường nằm ở Nhật ký chi tiết.</td></tr> }
+    </tbody></table></div>
+</div>

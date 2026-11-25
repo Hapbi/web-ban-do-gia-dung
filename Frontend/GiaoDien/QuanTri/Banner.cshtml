@@ -1,0 +1,39 @@
+@model List<Banner>
+@{ ViewBag.Title = "Quản lý banner"; }
+<div class="admin-panel">
+    <div class="panel-header"><div><h3>🖼️ Banner trang chủ</h3><p class="phu">Có thể tải ảnh trực tiếp hoặc dùng URL; banner đang bật sẽ xuất hiện trên trang chủ sau khi lưu.</p></div></div>
+    <form method="post" action="/quan-tri/banner/luu" enctype="multipart/form-data" class="form-grid-admin" style="margin-top:16px">
+        @Html.AntiForgeryToken()<input type="hidden" name="Id" value="0" />
+        <div><label>Tiêu đề</label><input name="TieuDe" required class="form-input" placeholder="Ưu đãi tháng này" /></div>
+        <div><label>Thứ tự hiển thị</label><input type="number" name="ThuTu" value="0" min="0" class="form-input" /></div>
+        <div class="span-all"><label>Tải ảnh (JPG/PNG/WEBP/GIF, tối đa 8MB)</label><input type="file" name="anhFile" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input" /></div>
+        <div class="span-all"><label>Hoặc link ảnh</label><input name="AnhUrl" class="form-input" placeholder="https://... hoặc /TaiLen/banner/anh.jpg" /></div>
+        <div class="span-all"><label>Đường dẫn khi khách bấm vào</label><input name="LienKet" value="/san-pham" class="form-input" placeholder="/san-pham" /></div>
+        <div><label class="checkbox-inline"><input type="checkbox" name="DangHienThi" value="true" checked /> Hiển thị ngay</label></div>
+        <div class="span-all"><button type="submit" class="btn-primary">＋ Thêm banner</button></div>
+    </form>
+</div>
+
+<div class="banner-admin-list mt-4">
+@foreach (var b in Model)
+{
+    <article class="admin-panel banner-admin-item">
+        <div class="banner-admin-image"><img src="@b.AnhUrl" alt="@b.TieuDe" onerror="this.src='/HinhAnh/anh-mac-dinh.svg'" /></div>
+        <div class="banner-admin-edit">
+            <form method="post" action="/quan-tri/banner/luu" enctype="multipart/form-data" class="form-grid-admin">
+                @Html.AntiForgeryToken()<input type="hidden" name="Id" value="@b.Id" />
+                <div><label>Tiêu đề</label><input name="TieuDe" value="@b.TieuDe" required class="form-input" /></div>
+                <div><label>Thứ tự</label><input type="number" name="ThuTu" value="@b.ThuTu" min="0" class="form-input" /></div>
+                <div class="span-all"><label>Đổi ảnh (để trống để giữ ảnh hiện tại)</label><input type="file" name="anhFile" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input" /></div>
+                <div class="span-all"><label>Hoặc thay link ảnh</label><input name="AnhUrl" value="@b.AnhUrl" class="form-input" /></div>
+                <div class="span-all"><label>Link khi bấm</label><input name="LienKet" value="@b.LienKet" class="form-input" /></div>
+                <div><label class="checkbox-inline"><input type="checkbox" name="DangHienThi" value="true" checked="@b.DangHienThi" /> Đang hiển thị</label></div>
+                <div class="span-all"><button type="submit" class="btn-primary">Lưu thay đổi</button></div>
+            </form>
+        </div>
+        <form method="post" action="/quan-tri/banner/@b.Id/xoa" onsubmit="return confirm('Xóa banner này?')">
+            @Html.AntiForgeryToken()<button type="submit" class="nut-nguy-hiem">Xóa</button>
+        </form>
+    </article>
+}
+</div>

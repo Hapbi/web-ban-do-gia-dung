@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GIADUNGCHATLUONG</RootNamespace>
+    <AssemblyName>GIADUNGCHATLUONG</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.11.4" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <!-- SQL Server hỗ trợ thêm; SQLite là mặc định để dự án có thể chạy ngay với dữ liệu cũ. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+    <PackageReference Include="System.Formats.Asn1" Version="6.0.1" />
+    <PackageReference Include="System.Text.Json" Version="8.0.6" />
+    <!-- Tệp giao diện tĩnh nằm trong Frontend/TaiNguyen thay vì wwwroot. -->
+    <None Remove="Frontend\TaiNguyen\**\*" />
+    <Content Include="Frontend\TaiNguyen\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <!-- Đóng gói cơ sở dữ liệu SQLite hiện có cùng ứng dụng. -->
+    <None Update="Database\cua-hang.db" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

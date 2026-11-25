@@ -1,0 +1,25 @@
+<div class="trang-dang-nhap">
+    <div class="the-dang-nhap">
+        <h1>Đăng nhập</h1>
+        <p class="phu">Chào mừng bạn quay lại!</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <label>Email hoặc tên đăng nhập</label>
+            <input type="text" name="email" required autocomplete="username" placeholder="Nhập email hoặc admin" />
+            <label>Mật khẩu</label>
+            <input type="password" name="matKhau" required autocomplete="current-password" />
+            <button type="submit" class="nut-chinh nut-day-du nut-lon" data-nut-ripple>Đăng nhập</button>
+        </form>
+        <div class="lien-ket-phu"><a href="/tai-khoan/dang-ky">Chưa có tài khoản? Đăng ký</a></div>
+        <div class="tai-khoan-demo">
+            <p class="phu">Tài khoản demo:</p>
+            <button type="button" class="nut-demo" onclick="fillDangNhap('admin','Admin@123')">Admin: admin / Admin@123 (hoặc admin@shop.vn)</button>
+            <button type="button" class="nut-demo" onclick="fillDangNhap('staff@shop.vn','Staff@123')">Nhân viên: staff@shop.vn / Staff@123</button>
+            <button type="button" class="nut-demo" onclick="fillDangNhap('khach@shop.vn','Khach@123')">Khách: khach@shop.vn / Khach@123</button>
+        </div>
+    </div>
+</div>
+<script>
+function fillDangNhap(e,p){document.querySelector('[name=email]').value=e;document.querySelector('[name=matKhau]').value=p;}
+</script>

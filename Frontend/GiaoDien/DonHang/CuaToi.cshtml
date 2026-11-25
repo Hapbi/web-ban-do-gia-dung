@@ -1,0 +1,32 @@
+@using GIADUNGCHATLUONG.MoHinh
+@model List<DonHang>
+<div class="khung phan" style="padding-top:100px">
+    <h1 class="tieu-de-trang">📦 Đơn hàng của tôi</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="trong-trong">
+            <div class="bieu-tuong-trong">📦</div>
+            <h3>Chưa có đơn hàng</h3>
+            <p>Bạn chưa đặt đơn nào.</p>
+            <a href="/san-pham" class="nut-chinh">Mua sắm ngay</a>
+        </div>
+    }
+    else
+    {
+        @foreach (var don in Model)
+        {
+            <div class="the-don-hang">
+                <div class="dau-don">
+                    <strong>#@don.MaDon</strong>
+                    <span class="huy-hieu-trang-thai mau-@TrangThaiDon.Mau(don.TrangThai)">@TrangThaiDon.Ten(don.TrangThai)</span>
+                </div>
+                <div class="phu">@TienIch.NgayGio(don.NgayTao) · @don.ChiTiet.Count sản phẩm</div>
+                <div class="chan-don">
+                    <div>Tổng: <strong class="gia-noi-bat">@TienIch.Tien(don.TongTien)</strong></div>
+                    <a href="/don-hang/@don.MaDon" class="nut-phu nut-nho">Chi tiết →</a>
+                </div>
+            </div>
+        }
+    }
+</div>

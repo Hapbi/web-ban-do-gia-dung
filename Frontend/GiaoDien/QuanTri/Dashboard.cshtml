@@ -1,0 +1,88 @@
+@{
+    ViewBag.Title = "Dashboard";
+    var doanhThuHomNay = (decimal)ViewBag.DoanhThuHomNay;
+    var doanhThuThang = (decimal)ViewBag.DoanhThuThang;
+    var soDonChoXacNhan = (int)ViewBag.SoDonChoXacNhan;
+    var soDonDangGiao = (int)ViewBag.SoDonDangGiao;
+    var soDonHoanThanh = (int)ViewBag.SoDonHoanThanh;
+    var soDonDaHuy = (int)ViewBag.SoDonDaHuy;
+    var tongDon = (int)ViewBag.TongDon;
+    var tongSanPham = (int)ViewBag.TongSanPham;
+    var tongKhachHang = (int)ViewBag.TongKhachHang;
+    var tongTonKho = (int)ViewBag.TongTonKho;
+    var giaTriTonKho = (decimal)ViewBag.GiaTriTonKho;
+    var topKhachHang = ViewBag.TopKhachHang as System.Collections.IEnumerable;
+    var sanPhamSapHet = ViewBag.SanPhamSapHet as List<GIADUNGCHATLUONG.MoHinh.SanPham> ?? new();
+    var sanPhamHetHang = ViewBag.SanPhamHetHang as List<GIADUNGCHATLUONG.MoHinh.SanPham> ?? new();
+    var donMoiNhat = ViewBag.DonMoiNhat as List<GIADUNGCHATLUONG.MoHinh.DonHang> ?? new();
+}
+<div class="luoi-thong-ke">
+    <div class="the-thong-ke">
+        <div class="nhan">Doanh thu hôm nay</div>
+        <div class="so" style="color:#15803d">@TienIch.Tien(doanhThuHomNay)</div>
+    </div>
+    <div class="the-thong-ke">
+        <div class="nhan">Doanh thu tháng</div>
+        <div class="so" style="color:#be123c">@TienIch.Tien(doanhThuThang)</div>
+    </div>
+    <div class="the-thong-ke">
+        <div class="nhan">Tổng số đơn</div>
+        <div class="so">@tongDon</div>
+    </div>
+    <div class="the-thong-ke">
+        <div class="nhan">Chờ xác nhận</div>
+        <div class="so" style="color:#a16207">@soDonChoXacNhan</div>
+    </div>
+    <div class="the-thong-ke"><div class="nhan">Khách hàng</div><div class="so">@tongKhachHang</div></div>
+    <div class="the-thong-ke"><div class="nhan">Tồn kho hiện có</div><div class="so">@tongTonKho</div></div>
+    <div class="the-thong-ke"><div class="nhan">Giá trị tồn ước tính</div><div class="so">@TienIch.Tien(giaTriTonKho)</div></div>
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>Tình trạng đơn hàng</h3>
+    <div class="danh-sach-trang-thai">
+        <div class="dong-trang-thai"><span>Chờ xác nhận</span><strong style="color:#a16207">@soDonChoXacNhan</strong></div>
+        <div class="dong-trang-thai"><span>Đang giao</span><strong style="color:#6d28d9">@soDonDangGiao</strong></div>
+        <div class="dong-trang-thai"><span>Hoàn thành</span><strong style="color:#15803d">@soDonHoanThanh</strong></div>
+        <div class="dong-trang-thai"><span>Đã hủy</span><strong style="color:#be123c">@soDonDaHuy</strong></div>
+    </div>
+</div>
+
+<div class="admin-panel mt-4">
+    <div class="panel-header"><h3>⚠️ Sản phẩm sắp hết</h3><a class="btn-primary" href="/quan-tri/kho-hang">Mở kho hàng</a></div>
+    @if (!sanPhamSapHet.Any() && !sanPhamHetHang.Any()) { <p class="phu">Không có sản phẩm nào sắp hết.</p> }
+    else
+    {
+        @foreach (var sp in sanPhamSapHet) { <div class="dong-canh-bao"><span>@sp.Ten</span><span class="huy-hieu-canh-bao">Còn @sp.TonKho</span></div> }
+        @foreach (var sp in sanPhamHetHang) { <div class="dong-canh-bao"><span>@sp.Ten</span><span class="huy-hieu-nguy-hiem">Hết hàng</span></div> }
+    }
+</div>
+
+<div class="admin-panel mt-4">
+    <div class="panel-header"><div><h3>🏆 Khách hàng chi tiêu cao</h3><p class="phu">Tổng hợp từ đơn đã thanh toán/hoàn thành, tính trực tiếp từ database.</p></div><a href="/bang-xep-hang" class="btn-primary">Bảng xếp hạng</a></div>
+    @if (topKhachHang != null)
+    {
+        <div class="table-responsive"><table class="table-glass mt-3"><thead><tr><th>Khách hàng</th><th>Số đơn hợp lệ</th><th>Tổng chi tiêu</th></tr></thead><tbody>
+        @foreach (var kh in topKhachHang) { <tr><td><strong>@kh.GetType().GetProperty("Ten").GetValue(kh)</strong></td><td>@kh.GetType().GetProperty("SoDon").GetValue(kh)</td><td><strong>@TienIch.Tien((decimal)kh.GetType().GetProperty("TongChi").GetValue(kh))</strong></td></tr> }
+        </tbody></table></div>
+    }
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>🧾 Đơn mới nhất</h3>
+    <table class="table-glass mt-3">
+        <thead><tr><th>Mã đơn</th><th>Khách</th><th>Tổng</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
+        <tbody>
+            @foreach (var d in donMoiNhat)
+            {
+                <tr>
+                    <td><code>@d.MaDon</code></td>
+                    <td>@d.HoTen</td>
+                    <td><strong>@TienIch.Tien(d.TongTien)</strong></td>
+                    <td><span class="badge-warning">@TrangThaiDon.Ten(d.TrangThai)</span></td>
+                    <td class="phu">@TienIch.NgayGio(d.NgayTao)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

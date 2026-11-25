@@ -1,0 +1,51 @@
+@model SanPham
+<article class="the-san-pham" data-hieuung="the-san-pham">
+    <div class="khung-anh-san-pham">
+        <a href="/san-pham/@Model.Id" class="anh-san-pham">
+            <img src="@(string.IsNullOrWhiteSpace(Model.AnhChinh) ? "/HinhAnh/anh-mac-dinh.svg" : Model.AnhChinh)"
+                 alt="@Model.Ten" loading="lazy" onerror="this.onerror=null;this.src='/HinhAnh/anh-mac-dinh.svg'" />
+            @if (Model.CoGiamGia) { <span class="nhan-giam-gia">-@Model.PhanTramGiam%</span> }
+            @if (Model.NoiBat) { <span class="nhan-noi-bat">⭐</span> }
+        </a>
+        @if (Model.TonKho == 0) { <div class="lop-het-hang">Hết hàng</div> }
+    </div>
+    <div class="than-the">
+        <div class="danh-muc-the">@Model.DanhMuc?.Icon @Model.DanhMuc?.Ten</div>
+        <h3><a href="/san-pham/@Model.Id">@Model.Ten</a></h3>
+        <div class="danh-gia-sao">
+            <span class="sao">
+                @for (var i = 1; i <= 5; i++)
+                {
+                    <span class="@(i <= Math.Round(Model.DiemTrungBinh) ? "day" : "")">★</span>
+                }
+            </span>
+            <span class="so-danh-gia">@(Model.SoDanhGia == 0 ? "Chưa có đánh giá" : $"({Model.SoDanhGia})")</span>
+        </div>
+        <div class="gia-san-pham">
+            <span class="gia-hien-tai">@TienIch.Tien(Model.GiaHienTai)</span>
+            @if (Model.CoGiamGia) { <span class="gia-goc">@TienIch.Tien(Model.GiaGoc)</span> }
+        </div>
+        @if (Model.DaBan > 0) { <div class="da-ban">Đã bán @Model.DaBan</div> }
+        @if (Model.TonKho > 0)
+        {
+            <div class="cum-nut-san-pham">
+                <form method="post" action="/gio-hang/them" class="bieu-mau-them-gio">
+            @Html.AntiForgeryToken()
+                    <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                    <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                    <button type="submit" class="nut-them-gio" data-nut-ripple>🛒 Thêm giỏ</button>
+                </form>
+                <form method="post" action="/gio-hang/them" class="bieu-mau-mua-luon">
+            @Html.AntiForgeryToken()
+                    <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                    <input type="hidden" name="muaLuon" value="true" />
+                    <button type="submit" class="nut-mua-luon" data-nut-ripple>⚡ Mua luôn</button>
+                </form>
+            </div>
+        }
+        else
+        {
+            <button type="button" class="nut-them-gio" disabled>Hết hàng</button>
+        }
+    </div>
+</article>

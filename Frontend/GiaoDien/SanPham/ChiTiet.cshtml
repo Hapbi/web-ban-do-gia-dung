@@ -1,0 +1,215 @@
+@model SanPham
+@{
+    var daMua = (bool)(ViewBag.DaMua ?? false);
+    var daDanhGia = (bool)(ViewBag.DaDanhGia ?? false);
+    var yeuThich = (bool)(ViewBag.YeuThich ?? false);
+    var lienQuan = ViewBag.SanPhamLienQuan as List<SanPham> ?? new();
+    var danhGiaDuyet = Model.DanhSachDanhGia.OrderByDescending(x => x.NgayTao).ToList();
+    var danhSachThongSo = ThongTinSanPhamHelper.TachThongSo(Model.ThongSo);
+    var congDung = ThongTinSanPhamHelper.LayCongDungMacDinh(Model);
+    var doiTuong = ThongTinSanPhamHelper.LayDoiTuongMacDinh(Model);
+}
+<div class="khung phan" style="padding-top:100px">
+    <nav class="duong-dan">
+        <a href="/">Trang chủ</a> / <a href="/san-pham?dm=@Model.DanhMucId">@Model.DanhMuc?.Ten</a> / @Model.Ten
+    </nav>
+
+    <div class="luoi-chi-tiet">
+        <div class="anh-chi-tiet">
+            <img src="@(string.IsNullOrWhiteSpace(Model.AnhChinh) ? "/HinhAnh/anh-mac-dinh.svg" : Model.AnhChinh)"
+                 alt="@Model.Ten" onerror="this.onerror=null;this.src='/HinhAnh/anh-mac-dinh.svg'" />
+            @if (Model.CoGiamGia) { <span class="nhan-giam-gia lon">-@Model.PhanTramGiam%</span> }
+        </div>
+
+        <div class="thong-tin-chi-tiet">
+            <div class="danh-muc-nho">@Model.DanhMuc?.Icon @Model.DanhMuc?.Ten</div>
+            <h1>@Model.Ten</h1>
+
+            <div class="danh-gia-dau">
+                <span class="sao">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        <span class="@(i <= Math.Round(Model.DiemTrungBinh) ? "day" : "")">★</span>
+                    }
+                </span>
+                <span>@Model.DiemTrungBinh.ToString("0.0")/5 · @Model.SoDanhGia đánh giá · Đã bán @Model.DaBan</span>
+            </div>
+
+            <div class="gia-chi-tiet">
+                <span class="gia-hien-tai lon">@TienIch.Tien(Model.GiaHienTai)</span>
+                @if (Model.CoGiamGia) { <span class="gia-goc">@TienIch.Tien(Model.GiaGoc)</span> }
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.MoTa))
+            {
+                <p class="mo-ta">@Model.MoTa</p>
+            }
+
+            <div class="ton-kho">
+                @if (Model.TonKho > 5) { <span class="con-hang">✓ Còn hàng (@Model.TonKho)</span> }
+                else if (Model.TonKho > 0) { <span class="sap-het">⚠ Chỉ còn @Model.TonKho sản phẩm</span> }
+                else { <span class="het-hang">✗ Hết hàng</span> }
+            </div>
+
+            @if (Model.TonKho > 0)
+            {
+                <form method="post" action="/gio-hang/them" class="cum-nut-chi-tiet">
+            @Html.AntiForgeryToken()
+                    <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                    <div class="bo-dem">
+                        <button type="button" onclick="this.parentElement.querySelector('input').stepDown()">−</button>
+                        <input type="number" name="soLuong" value="1" min="1" max="@Model.TonKho" />
+                        <button type="button" onclick="this.parentElement.querySelector('input').stepUp()">+</button>
+                    </div>
+                    <button type="submit" class="nut-chinh nut-lon" data-nut-ripple>🛒 Thêm vào giỏ</button>
+                </form>
+                <form method="post" action="/gio-hang/them" class="bieu-mau-mua-luon-chi-tiet">
+            @Html.AntiForgeryToken()
+                    <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                    <input type="hidden" name="soLuong" value="1" />
+                    <input type="hidden" name="muaLuon" value="true" />
+                    <button type="submit" class="nut-phu nut-lon nut-day-du" data-nut-ripple>⚡ Mua luôn</button>
+                </form>
+            }
+
+            <form method="post" action="/yeu-thich" class="bieu-mau-yeu-thich">
+            @Html.AntiForgeryToken()
+                <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                <button type="submit" class="nut-yeu-thich @(yeuThich ? "dang-yeu" : "")">
+                    @(yeuThich ? "❤️ Đã yêu thích" : "🤍 Yêu thích")
+                </button>
+            </form>
+
+            <div class="khung-cam-ket">
+                <div>🛡️ Bảo hành chính hãng</div>
+                <div>🚚 Giao toàn quốc</div>
+                <div>↩️ Đổi trả 7 ngày</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="khung-thong-tin-san-pham">
+        <div class="tieu-de-thong-tin">
+            <span class="nhan-nhom-san-pham">@(Model.DanhMuc?.Icon ?? "📦") @Model.DanhMuc?.Ten</span>
+            <h2>Thông tin sản phẩm</h2>
+            <p>Thông tin được trình bày theo công dụng và đặc điểm của chính mặt hàng này.</p>
+        </div>
+        <div class="luoi-thong-tin-san-pham">
+            <article class="the-thong-tin-san-pham">
+                <span class="icon-thong-tin-san-pham">🎯</span>
+                <div><h3>Công dụng chính</h3><p>@congDung</p></div>
+            </article>
+            <article class="the-thong-tin-san-pham">
+                <span class="icon-thong-tin-san-pham">👨‍👩‍👧‍👦</span>
+                <div><h3>Phù hợp với</h3><p>@doiTuong</p></div>
+            </article>
+            @if (!string.IsNullOrWhiteSpace(Model.TinhNangNoiBat))
+            {
+                <article class="the-thong-tin-san-pham">
+                    <span class="icon-thong-tin-san-pham">✨</span>
+                    <div><h3>Tính năng nổi bật</h3><p>@Model.TinhNangNoiBat</p></div>
+                </article>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.LuuYSuDung))
+            {
+                <article class="the-thong-tin-san-pham the-luu-y">
+                    <span class="icon-thong-tin-san-pham">💡</span>
+                    <div><h3>Lưu ý khi sử dụng</h3><p>@Model.LuuYSuDung</p></div>
+                </article>
+            }
+        </div>
+
+        @if (danhSachThongSo.Any())
+        {
+            <div class="phan-thong-so-san-pham">
+                <div class="dau-phan-thong-so"><h3>Thông số riêng của sản phẩm</h3><span>@danhSachThongSo.Count thông tin</span></div>
+                <div class="luoi-thong-so-moi">
+                    @foreach (var thongSo in danhSachThongSo)
+                    {
+                        <div class="the-thong-so-moi">
+                            <span class="bieu-tuong-thong-so">@thongSo.BieuTuong</span>
+                            <div><span>@thongSo.Ten</span><strong>@thongSo.GiaTri</strong></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </section>
+
+    <section class="khung-danh-gia">
+        <h2>Đánh giá (@Model.SoDanhGia)</h2>
+
+        @if (daMua && !daDanhGia)
+        {
+            <form method="post" action="/danh-gia" class="bieu-mau-danh-gia">
+            @Html.AntiForgeryToken()
+                <input type="hidden" name="sanPhamId" value="@Model.Id" />
+                <div>
+                    <label>Số sao</label>
+                    <div class="chon-sao">
+                        @for (var i = 5; i >= 1; i--)
+                        {
+                            <input type="radio" name="soSao" value="@i" id="sao-@i" checked="@(i == 5)" />
+                            <label for="sao-@i">★</label>
+                        }
+                    </div>
+                </div>
+                <div><label>Tiêu đề</label><input name="tieuDe" required maxlength="120" /></div>
+                <div><label>Nội dung</label><textarea name="noiDung" rows="4" required maxlength="1000"></textarea></div>
+                <button type="submit" class="nut-chinh" data-nut-ripple>Gửi đánh giá</button>
+            </form>
+        }
+        else if (daDanhGia)
+        {
+            <p class="phu">Bạn đã gửi đánh giá cho sản phẩm này. Cảm ơn bạn đã chia sẻ trải nghiệm!</p>
+        }
+        else if (User.Identity?.IsAuthenticated == true)
+        {
+            <p class="phu">Bạn cần mua và nhận sản phẩm để đánh giá.</p>
+        }
+        else
+        {
+            <p class="phu"><a href="/tai-khoan/dang-nhap">Đăng nhập</a> để đánh giá sản phẩm.</p>
+        }
+
+        <div class="danh-sach-danh-gia">
+            @if (!danhGiaDuyet.Any())
+            {
+                <p class="phu">Chưa có đánh giá nào.</p>
+            }
+            else
+            {
+                @foreach (var dg in danhGiaDuyet)
+                {
+                    <div class="dong-danh-gia">
+                        <div class="dau-danh-gia">
+                            <strong>@(dg.NguoiDung?.HoTen ?? "Ẩn danh")</strong>
+                            @if (dg.DaMuaXacMinh) { <span class="nhan-da-mua">✓ Đã mua hàng</span> }
+                            <span class="sao">
+                                @for (var i = 1; i <= 5; i++)
+                                {
+                                    <span class="@(i <= dg.SoSao ? "day" : "")">★</span>
+                                }
+                            </span>
+                            <span class="ngay-danh-gia">@TienIch.Ngay(dg.NgayTao)</span>
+                        </div>
+                        <h4>@dg.TieuDe</h4>
+                        <p>@dg.NoiDung</p>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    @if (lienQuan.Any())
+    {
+        <section class="phan">
+            <div class="dau-phan"><h2>Sản phẩm liên quan</h2></div>
+            <div class="luoi-san-pham">
+                @foreach (var sp in lienQuan) { <partial name="_TheSanPham" model="sp" /> }
+            </div>
+        </section>
+    }
+</div>

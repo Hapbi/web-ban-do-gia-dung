@@ -1,0 +1,30 @@
+@model List<KhachHangXepHangVM>
+@{
+    ViewBag.Title = "Bảng xếp hạng khách hàng";
+    var ch = ViewBag.CauHinh as CauHinh ?? new CauHinh();
+}
+<section class="ranking-page">
+    <div class="ranking-hero">
+        <span class="eyebrow">GIADUNGCHATLUONG · TRI ÂN KHÁCH HÀNG</span>
+        <h1>🏆 Bảng xếp hạng khách hàng</h1>
+        <p>Mua sắm càng nhiều, đặc quyền càng lớn. Bảng xếp hạng tính theo tổng giá trị đơn đã thanh toán hoặc hoàn thành, không tính đơn đã hủy.</p>
+        <div class="ranking-stats"><div><strong>@ViewBag.TongGiaoDich</strong><span>Giao dịch hợp lệ</span></div><div><strong>@TienIch.Tien((decimal)ViewBag.TongDoanhThu)</strong><span>Tổng chi tiêu ghi nhận</span></div><div><strong>@Model.Count</strong><span>Khách hàng nổi bật</span></div></div>
+    </div>
+    <div class="ranking-rewards">
+        <article><span>🥇 Hạng 1</span><strong>@ch.QuaHangNhat</strong></article>
+        <article><span>🥈 Hạng 2</span><strong>@ch.QuaHangNhi</strong></article>
+        <article><span>🥉 Hạng 3</span><strong>@ch.QuaHangBa</strong></article>
+    </div>
+    <div class="ranking-table-wrap">
+        <div class="ranking-table-heading"><div><h2>Khách hàng thân thiết</h2><p>Điểm tích lũy quy đổi: 10.000đ = 1 điểm</p></div><span>Top 20</span></div>
+        <div class="table-responsive"><table class="ranking-table"><thead><tr><th>Thứ hạng</th><th>Khách hàng</th><th>Số đơn</th><th>Tổng chi tiêu</th><th>Điểm</th><th>Quà tặng / quyền lợi</th></tr></thead><tbody>
+        @if (!Model.Any()) { <tr><td colspan="6" class="empty-ranking">Chưa có giao dịch hợp lệ. Hãy là khách hàng đầu tiên trên bảng xếp hạng nhé!</td></tr> }
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            <tr class="@(i < 3 ? "ranking-top" : "")"><td><span class="ranking-medal">@(i == 0 ? "🥇" : i == 1 ? "🥈" : i == 2 ? "🥉" : (i + 1).ToString("00"))</span></td><td><strong>@item.HoTen</strong><small>Thành viên GIADUNGCHATLUONG</small></td><td>@item.SoDon đơn</td><td><strong>@TienIch.Tien(item.TongChi)</strong></td><td>@item.Diem.ToString("N0") điểm</td><td>@item.Qua</td></tr>
+        }
+        </tbody></table></div>
+    </div>
+    <p class="ranking-note">Lưu ý: số liệu được tổng hợp tự động từ database. Quà tặng trong phiên bản demo chỉ là thông tin minh họa, chưa phát sinh quy đổi hay thanh toán thật.</p>
+</section>

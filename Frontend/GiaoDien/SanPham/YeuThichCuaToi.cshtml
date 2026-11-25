@@ -1,0 +1,19 @@
+@model List<SanPham>
+<div class="khung phan" style="padding-top:100px">
+    <h1 class="tieu-de-trang">❤️ Sản phẩm yêu thích</h1>
+    @if (!Model.Any())
+    {
+        <div class="trong-trong">
+            <div class="bieu-tuong-trong">❤️</div>
+            <h3>Chưa có sản phẩm yêu thích</h3>
+            <p>Hãy thả tim những sản phẩm bạn thích.</p>
+            <a href="/san-pham" class="nut-chinh nut-lon">Mua sắm ngay</a>
+        </div>
+    }
+    else
+    {
+        <div class="luoi-san-pham">
+            @foreach (var sp in Model) { <partial name="_TheSanPham" model="sp" /> }
+        </div>
+    }
+</div>

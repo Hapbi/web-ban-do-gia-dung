@@ -1,0 +1,48 @@
+@model List<LienHe>
+@{
+    ViewBag.Title = "Liên hệ khách hàng";
+    var tt = ViewBag.TrangThai as string;
+    var soMoi = (int)ViewBag.SoMoi;
+}
+<div class="admin-panel">
+    <h3>💬 Liên hệ khách hàng</h3>
+    <p class="phu">Có <strong style="color:#be123c">@soMoi</strong> liên hệ mới chưa xử lý</p>
+    <form method="get" class="hang-cot">
+        <select name="trangThai">
+            <option value="">Tất cả trạng thái</option>
+            <option value="Moi" selected="@(tt == "Moi")">Mới</option>
+            <option value="DangXuLy" selected="@(tt == "DangXuLy")">Đang xử lý</option>
+            <option value="DaXuLy" selected="@(tt == "DaXuLy")">Đã xử lý</option>
+        </select>
+        <button type="submit" class="btn-primary">Lọc</button>
+    </form>
+</div>
+
+@foreach (var lh in Model)
+{
+    <div class="admin-panel mt-4">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div><strong>@lh.HoTen</strong><span class="phu"> · @lh.Email · @lh.DienThoai</span></div>
+            <small class="phu">@TienIch.NgayGio(lh.NgayTao)</small>
+        </div>
+        <p style="margin-bottom:14px;padding:12px;background:#0a0a0a;border-radius:8px">@lh.NoiDung</p>
+        <form method="post" action="/quan-tri/lien-he/@lh.Id/cap-nhat">
+            @Html.AntiForgeryToken()
+            <div style="display:grid;grid-template-columns:200px 1fr auto;gap:10px;align-items:end">
+                <div>
+                    <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Trạng thái</label>
+                    <select name="trangThai" class="form-input">
+                        <option value="Moi" selected="@(lh.TrangThai == "Moi")">Mới</option>
+                        <option value="DangXuLy" selected="@(lh.TrangThai == "DangXuLy")">Đang xử lý</option>
+                        <option value="DaXuLy" selected="@(lh.TrangThai == "DaXuLy")">Đã xử lý</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Ghi chú xử lý</label>
+                    <input name="ghiChuXuLy" value="@lh.GhiChuXuLy" class="form-input" />
+                </div>
+                <button type="submit" class="btn-primary">Lưu</button>
+            </div>
+        </form>
+    </div>
+}

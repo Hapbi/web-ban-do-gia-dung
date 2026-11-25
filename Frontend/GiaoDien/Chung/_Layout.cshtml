@@ -1,0 +1,230 @@
+@inject GIADUNGCHATLUONG.DuLieu.AppDb Db
+@{
+    var ch = Db.CauHinhs.FirstOrDefault() ?? new CauHinh();
+    var soLuongGio = GioHangHelper.TongSoLuong(Context.Session);
+    var path = Context.Request.Path.Value?.ToLower() ?? "";
+    var laQuanTri = path.StartsWith("/quan-tri");
+    var user = User;
+    var mauChuDao = System.Text.RegularExpressions.Regex.IsMatch(ch.MauChuDao ?? "", "^#[0-9a-fA-F]{6}$") ? ch.MauChuDao : "#2563EB";
+    var mauPhu = System.Text.RegularExpressions.Regex.IsMatch(ch.MauPhu ?? "", "^#[0-9a-fA-F]{6}$") ? ch.MauPhu : "#0F766E";
+    var mauNen = System.Text.RegularExpressions.Regex.IsMatch(ch.MauNen ?? "", "^#[0-9a-fA-F]{6}$") ? ch.MauNen : "#F7F8FC";
+    var mauChu = System.Text.RegularExpressions.Regex.IsMatch(ch.MauChu ?? "", "^#[0-9a-fA-F]{6}$") ? ch.MauChu : "#182235";
+    var mauThe = System.Text.RegularExpressions.Regex.IsMatch(ch.MauThe ?? "", "^#[0-9a-fA-F]{6}$") ? ch.MauThe : "#FFFFFF";
+    var font = ch.KieuChu switch { "arial" => "Arial,Helvetica,sans-serif", "serif" => "Georgia,Times New Roman,serif", "rounded" => "Trebuchet MS,Arial,sans-serif", _ => "system-ui,Segoe UI,Arial,sans-serif" };
+    var coChu = ch.CoChu == "nho" ? "0.94" : ch.CoChu == "lon" ? "1.06" : "1";
+    var boGoc = ch.KieuThe == "vuong" ? "7px" : ch.KieuThe == "tron" ? "22px" : "14px";
+    var bong = ch.KieuBong == "tat" ? "none" : ch.KieuBong == "vua" ? "0 12px 32px rgba(15,23,42,.11)" : "0 5px 18px rgba(15,23,42,.055)";
+    var doRong = Math.Clamp(ch.DoRongTrang, 1100, 1600);
+    var soCot = Math.Clamp(ch.SoCotSanPham, 2, 5);
+    var layoutClass = ch.KieuBoCuc == "gon" ? "layout-compact" : "layout-wide";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — @ch.TenShop</title>
+    <link rel="icon" type="image/svg+xml" href="~/HinhAnh/logo-gia-dung.svg" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/CSS/tong-the.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CSS/hieu-ung.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CSS/quan-tri.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CSS/giao-dien.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CSS/san-pham.css" asp-append-version="true" />
+    <style>:root{--brand-primary:@mauChuDao;--brand-secondary:@mauPhu;--brand-page:@mauNen;--brand-text:@mauChu;--brand-card:@mauThe;--brand-font:@font;--brand-scale:@coChu;--brand-width:@(doRong)px;--brand-columns:@soCot;--brand-radius:@boGoc;--brand-shadow:@Html.Raw(bong);}</style>
+</head>
+<body class="@(laQuanTri ? "admin-body" : "site-body") @layoutClass">
+
+
+
+@if (!laQuanTri)
+{
+    <header class="header-glass">
+        <div class="header-inner">
+            <a href="/" class="logo" title="Về trang chủ">
+                <img src="~/HinhAnh/logo-gia-dung.svg" alt="" />
+                <span>GIADUNGCHATLUONG<small>GIA DỤNG CHẤT LƯỢNG</small></span>
+            </a>
+            <div class="site-nav-cluster">
+                <nav class="nav-links">
+                    <a href="/">Trang chủ</a>
+                    <a href="/san-pham">Sản phẩm</a>
+                    <a href="/bang-xep-hang">🏆 Khách hàng thân thiết</a>
+                    <a href="/lien-he">Liên hệ</a>
+                </nav>
+                <div class="history-nav" aria-label="Điều hướng lịch sử">
+                    <button type="button" onclick="history.back()" title="Quay lại">←</button>
+                    <button type="button" onclick="history.forward()" title="Tiến lên">→</button>
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="/gio-hang" class="cart-btn">
+                    🛒 <span class="cart-badge">@soLuongGio</span>
+                </a>
+                @if (user.Identity?.IsAuthenticated == true)
+                {
+                    @if (user.IsInRole("Admin") || user.IsInRole("AdminPhu") || user.IsInRole("NhanVien"))
+                    {
+                        <a href="/quan-tri" class="admin-link">⚙️ Quản trị</a>
+                    }
+                    <a href="/yeu-thich-cua-toi" class="icon-btn" title="Yêu thích">❤️</a>
+                    <a href="/don-hang-cua-toi" class="icon-btn" title="Đơn hàng">📦</a>
+                    <div class="menu-user">
+                        <button type="button" class="btn-user">👤 @user.Identity?.Name ▾</button>
+                        <div class="menu-drop">
+                            <div class="user-info">
+                                <strong>@user.Identity?.Name</strong>
+                                <small>@user.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</small>
+                                <span class="vai-tro">@VaiTro.Ten(user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "")</span>
+                            </div>
+                            <a href="/don-hang-cua-toi">📦 Đơn hàng</a>
+                            <a href="/yeu-thich-cua-toi">❤️ Yêu thích</a>
+                            <a href="/tai-khoan/doi-mat-khau">🔐 Đổi mật khẩu</a>
+                            <form method="post" action="/tai-khoan/dang-xuat">
+            @Html.AntiForgeryToken()
+                                <button type="submit">🚪 Đăng xuất</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a href="/tai-khoan/dang-nhap" class="btn-login">Đăng nhập</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main data-home-order="@ch.CauTrucTrangChu" data-home-hidden="@ch.CacKhoiAn">@RenderBody()</main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div><h3>@ch.TenShop</h3><p>@ch.Slogan</p></div>
+            <div><h4>Liên hệ</h4><p>📍 @ch.DiaChi</p><p>📞 @ch.DienThoai</p><p>✉️ @ch.Email</p></div>
+            <div><h4>Giờ mở cửa</h4><p>🕒 @ch.GioMoCua</p></div>
+            <div><h4>Thanh toán</h4><p>🏦 @ch.NganHang</p><p>@ch.SoTaiKhoan - @ch.ChuTaiKhoan</p></div>
+        </div>
+        <div class="footer-bottom">© @DateTime.Now.Year @ch.TenShop. Bảo lưu mọi quyền. <span class="footer-demo-note">Website thử nghiệm – chỉ mang tính chất minh họa; không phát sinh giao dịch hoặc thanh toán thật.</span></div>
+    </footer>
+}
+else
+{
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <a class="sidebar-logo" href="/" title="Về trang chủ">
+                <img src="~/HinhAnh/logo-gia-dung.svg" alt="" />
+                <span>GIADUNGCHATLUONG</span>
+            </a>
+            <nav class="sidebar-nav">
+                <a href="/quan-tri" class="nav-item @(path == "/quan-tri" ? "active" : "")">📊 Dashboard</a>
+                @if (QuyenHelper.CoQuyen(User, "sanpham") || User.IsInRole("Admin"))
+                {
+                    <div class="nav-group-title">Sản phẩm</div>
+                    <a href="/quan-tri/san-pham" class="nav-item @(path.StartsWith("/quan-tri/san-pham") ? "active" : "")">📦 Quản lý sản phẩm</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "danhmuc") || User.IsInRole("Admin"))
+                {
+                    <a href="/quan-tri/danh-muc" class="nav-item @(path.StartsWith("/quan-tri/danh-muc") ? "active" : "")">🗂️ Danh mục</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "kho"))
+                {
+                    <a href="/quan-tri/kho-hang" class="nav-item @(path.StartsWith("/quan-tri/kho-hang") ? "active" : "")">📦 Kho hàng</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "donhang"))
+                {
+                    <div class="nav-group-title">Bán hàng</div>
+                    <a href="/quan-tri/don-hang" class="nav-item @(path.StartsWith("/quan-tri/don-hang") ? "active" : "")">🧾 Đơn hàng</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "lienhe"))
+                {
+                    <a href="/quan-tri/lien-he" class="nav-item @(path.StartsWith("/quan-tri/lien-he") ? "active" : "")">💬 Liên hệ</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "danhgia"))
+                {
+                    <div class="nav-group-title">Nội dung</div>
+                    <a href="/quan-tri/danh-gia" class="nav-item @(path.StartsWith("/quan-tri/danh-gia") ? "active" : "")">⭐ Duyệt đánh giá</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "baocao"))
+                {
+                    <div class="nav-group-title">Báo cáo</div>
+                    <a href="/quan-tri/thong-ke" class="nav-item @(path.StartsWith("/quan-tri/thong-ke") ? "active" : "")">📈 Thống kê</a>
+                }
+                @if (QuyenHelper.CoQuyen(User, "banner") || QuyenHelper.CoQuyen(User, "baiviet") || User.IsInRole("Admin"))
+                {
+                    <div class="nav-group-title">Nội dung cửa hàng</div>
+                    @if (QuyenHelper.CoQuyen(User, "banner")) { <a href="/quan-tri/banner" class="nav-item @(path.StartsWith("/quan-tri/banner") ? "active" : "")">🖼️ Banner</a> }
+                    @if (QuyenHelper.CoQuyen(User, "baiviet")) { <a href="/quan-tri/bai-viet" class="nav-item @(path.StartsWith("/quan-tri/bai-viet") ? "active" : "")">📰 Bài viết</a> }
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="nav-group-title">Quản trị cao nhất</div>
+                    <a href="/quan-tri/nguoi-dung" class="nav-item @(path.StartsWith("/quan-tri/nguoi-dung") ? "active" : "")">👥 Người dùng & quyền</a>
+                    <a href="/quan-tri/cau-hinh" class="nav-item @(path.StartsWith("/quan-tri/cau-hinh") ? "active" : "")">⚙️ Cấu hình website</a>
+                    <div class="nav-group-title">Nhật ký hoạt động</div>
+                    <a href="/quan-tri/nhat-ky" class="nav-item @(path == "/quan-tri/nhat-ky" ? "active" : "")">📌 Nhật ký nghiệp vụ</a>
+                    <a href="/quan-tri/nhat-ky-theo-nguoi" class="nav-item @(path.StartsWith("/quan-tri/nhat-ky-theo-nguoi") ? "active" : "")">👤 Nhật ký từng người</a>
+                    <a href="/quan-tri/nhat-ky-chi-tiet" class="nav-item @(path.StartsWith("/quan-tri/nhat-ky-chi-tiet") ? "active" : "")">🔎 Nhật ký chi tiết</a>
+                }
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/" class="nav-item" style="margin-bottom:6px;">🏠 Về cửa hàng</a>
+                <a href="/tai-khoan/doi-mat-khau" class="nav-item" style="margin-bottom:10px;">🔐 Đổi mật khẩu</a>
+                <form method="post" action="/tai-khoan/dang-xuat">
+            @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-logout">Đăng xuất</button>
+                </form>
+            </div>
+        </aside>
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="admin-title-wrap"><h2>@ViewData["Title"]</h2><div class="history-nav"><button type="button" onclick="history.back()" title="Quay lại">←</button><button type="button" onclick="history.forward()" title="Tiến lên">→</button><a href="/" title="Về trang chủ">⌂</a></div></div>
+                <div class="admin-user">@User.Identity?.Name · @VaiTro.Ten(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "")</div>
+            </header>
+            <div class="admin-content">
+                @if (TempData["ThanhCong"] != null || TempData["Loi"] != null)
+                {
+                    @if (TempData["ThanhCong"] != null)
+                    {
+                        <div class="alert-success">✓ @TempData["ThanhCong"]</div>
+                    }
+                    @if (TempData["Loi"] != null)
+                    {
+                        <div class="alert-error">! @TempData["Loi"]</div>
+                    }
+                }
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+}
+
+@if (!laQuanTri && (TempData["ThanhCong"] != null || TempData["Loi"] != null))
+{
+    <div class="hop-thong-bao" id="hopThongBao">
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="thong-bao thong-bao-thanh-cong">
+                <span class="bieu-tuong">✓</span><p>@TempData["ThanhCong"]</p>
+                <button onclick="this.parentElement.remove()">×</button>
+            </div>
+        }
+        @if (TempData["Loi"] != null)
+        {
+            <div class="thong-bao thong-bao-loi">
+                <span class="bieu-tuong">!</span><p>@TempData["Loi"]</p>
+                <button onclick="this.parentElement.remove()">×</button>
+            </div>
+        }
+    </div>
+}
+
+<a href="#" class="nut-len-dau" id="nutLenDau">↑</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/JS/hieu-ung.js" asp-append-version="true"></script>
+<script src="~/JS/gio-hang.js" asp-append-version="true"></script>
+<script src="~/JS/tuy-chinh-giao-dien.js" asp-append-version="true"></script>
+<script src="~/JS/sap-xep-trang-chu.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

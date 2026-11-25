@@ -1,0 +1,98 @@
+@{
+    ViewBag.Title = "Thống kê";
+    var tuNgay = (DateTime)ViewBag.TuNgay;
+    var denNgay = (DateTime)ViewBag.DenNgay;
+    var doanhThu = (decimal)ViewBag.DoanhThu;
+    var soDon = (int)ViewBag.SoDon;
+    var donHuy = (int)ViewBag.DonHuy;
+    var bieuDo = ViewBag.BieuDo as List<(string Ngay, decimal Doanh)> ?? new();
+    var bieuDoMax = (decimal)ViewBag.BieuDoMax;
+    var topSanPham = ViewBag.TopSanPham as System.Collections.IEnumerable;
+    var conHang = (int)ViewBag.ConHang;
+    var sapHet = (int)ViewBag.SapHet;
+    var hetHang = (int)ViewBag.HetHang;
+    var sanPhamSapHet = ViewBag.SanPhamSapHet as List<GIADUNGCHATLUONG.MoHinh.SanPham> ?? new();
+}
+<div class="admin-panel">
+    <div class="panel-header">
+        <h3>📈 Thống kê</h3>
+        <a href="/quan-tri/thong-ke/xuat-csv?tuNgay=@tuNgay.ToString("yyyy-MM-dd")&denNgay=@denNgay.ToString("yyyy-MM-dd")" class="btn-primary">⬇ Xuất CSV</a>
+    </div>
+    <form method="get" class="hang-cot">
+        <div><label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Từ ngày</label><input type="date" name="tuNgay" value="@tuNgay.ToString("yyyy-MM-dd")" /></div>
+        <div><label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">Đến ngày</label><input type="date" name="denNgay" value="@denNgay.ToString("yyyy-MM-dd")" /></div>
+        <button type="submit" class="btn-primary">Xem</button>
+    </form>
+</div>
+
+<div class="luoi-thong-ke mt-4">
+    <div class="the-thong-ke"><div class="nhan">Doanh thu</div><div class="so" style="color:#15803d">@TienIch.Tien(doanhThu)</div></div>
+    <div class="the-thong-ke"><div class="nhan">Số đơn</div><div class="so">@soDon</div></div>
+    <div class="the-thong-ke"><div class="nhan">TB/đơn</div><div class="so">@TienIch.Tien(soDon == 0 ? 0 : Math.Round(doanhThu / soDon))</div></div>
+    <div class="the-thong-ke"><div class="nhan">Đơn hủy</div><div class="so" style="color:#be123c">@donHuy</div></div>
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>Doanh thu 7 ngày gần nhất</h3>
+    <div style="display:flex;align-items:flex-end;gap:12px;height:220px;padding:14px 0;border-bottom:1px solid #222">
+        @foreach (var item in bieuDo)
+        {
+            var phanTram = bieuDoMax > 0 ? (int)Math.Round(item.Doanh / bieuDoMax * 100) : 0;
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%">
+                <div style="flex:1;display:flex;align-items:flex-end;width:100%;justify-content:center">
+                    <div style="width:60%;max-width:40px;height:@Math.Max(3, phanTram)%;background:linear-gradient(180deg,#be123c,#ff1a40);border-radius:8px 8px 0 0"
+                         title="@item.Ngay: @TienIch.Tien(item.Doanh)"></div>
+                </div>
+                <small style="font-size:11px;color:#888;margin-top:8px">@item.Ngay</small>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>🏆 Top sản phẩm bán chạy</h3>
+    @if (topSanPham != null)
+    {
+        <table class="table-glass mt-3">
+            <thead><tr><th>Sản phẩm</th><th>SL</th><th>Doanh thu</th></tr></thead>
+            <tbody>
+                @foreach (var t in topSanPham)
+                {
+                    <tr>
+                        <td>@t.GetType().GetProperty("Ten").GetValue(t)</td>
+                        <td>x@(t.GetType().GetProperty("SoLuong").GetValue(t))</td>
+                        <td>@TienIch.Tien((decimal)t.GetType().GetProperty("DoanhThu").GetValue(t))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else { <p class="phu">Chưa có dữ liệu.</p> }
+</div>
+
+<div class="admin-panel mt-4">
+    <h3>Tồn kho</h3>
+    <div class="danh-sach-trang-thai">
+        <div class="dong-trang-thai"><span>Còn hàng</span><strong style="color:#15803d">@conHang</strong></div>
+        <div class="dong-trang-thai"><span>Sắp hết (≤ 5)</span><strong style="color:#a16207">@sapHet</strong></div>
+        <div class="dong-trang-thai"><span>Hết hàng</span><strong style="color:#be123c">@hetHang</strong></div>
+    </div>
+    @if (sanPhamSapHet.Any())
+    {
+        <h4 style="margin:16px 0 8px;font-size:13px">Sản phẩm cần nhập thêm:</h4>
+        @foreach (var sp in sanPhamSapHet)
+        {
+            <div class="dong-canh-bao"><span>@sp.Ten</span><span class="huy-hieu-canh-bao">Còn @sp.TonKho</span></div>
+        }
+    }
+</div>
+
+<div class="admin-panel mt-4">
+    <div class="panel-header"><div><h3>👑 Khách hàng giá trị cao</h3><p class="phu">Xếp theo tổng tiền giao dịch hợp lệ trong khoảng thời gian đang lọc.</p></div><a class="btn-primary" href="/bang-xep-hang">Bảng xếp hạng công khai</a></div>
+    <div class="table-responsive"><table class="table-glass mt-3"><thead><tr><th>Khách hàng</th><th>Số đơn</th><th>Tổng chi tiêu</th></tr></thead><tbody>
+    @if (ViewBag.TopKhachHang is System.Collections.IEnumerable topKhach)
+    {
+        foreach (var kh in topKhach) { <tr><td>@kh.GetType().GetProperty("Ten").GetValue(kh)</td><td>@kh.GetType().GetProperty("SoDon").GetValue(kh)</td><td><strong>@TienIch.Tien((decimal)kh.GetType().GetProperty("TongChi").GetValue(kh))</strong></td></tr> }
+    }
+    </tbody></table></div>
+</div>

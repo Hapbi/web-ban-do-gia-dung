@@ -1,0 +1,123 @@
+/* Khu vực mô tả và thông số linh hoạt theo từng sản phẩm. */
+.khung-thong-tin-san-pham {
+    margin: 28px 0;
+    padding: clamp(20px, 3vw, 34px);
+    border: 1px solid rgba(148, 163, 184, .2);
+    border-radius: 22px;
+    background: var(--brand-card, #fff);
+    box-shadow: 0 12px 34px rgba(20, 30, 50, .055);
+}
+.tieu-de-thong-tin { margin-bottom: 22px; }
+.tieu-de-thong-tin h2 { margin: 10px 0 5px; }
+.tieu-de-thong-tin p { margin: 0; color: #778196; }
+.nhan-nhom-san-pham {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(220, 38, 65, .08);
+    color: #c21d40;
+    font-size: 13px;
+    font-weight: 700;
+}
+.luoi-thong-tin-san-pham {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+}
+.the-thong-tin-san-pham {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 17px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.84));
+}
+.icon-thong-tin-san-pham {
+    display: grid;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 13px;
+    background: rgba(220, 38, 65, .09);
+    font-size: 20px;
+}
+.the-thong-tin-san-pham h3 { margin: 0 0 6px; font-size: 15px; }
+.the-thong-tin-san-pham p { margin: 0; line-height: 1.65; color: #667085; }
+.the-thong-tin-san-pham.the-luu-y { background: rgba(250, 204, 21, .07); }
+.phan-thong-so-san-pham { margin-top: 26px; }
+.dau-phan-thong-so { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.dau-phan-thong-so h3 { margin: 0; font-size: 17px; }
+.dau-phan-thong-so span { color: #8a94a6; font-size: 12px; }
+.luoi-thong-so-moi { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.the-thong-so-moi {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    padding: 13px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 13px;
+    background: rgba(248, 250, 252, .78);
+}
+.bieu-tuong-thong-so {
+    display: grid;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: rgba(220, 38, 65, .08);
+    font-size: 17px;
+}
+.the-thong-so-moi div { display: grid; min-width: 0; gap: 4px; }
+.the-thong-so-moi div span { color: #7b8495; font-size: 12px; }
+.the-thong-so-moi strong { overflow-wrap: anywhere; color: #253047; font-size: 14px; }
+.nhom-mo-ta-san-pham, .nhom-thong-so-san-pham {
+    margin: 20px 0;
+    padding: 18px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 16px;
+    background: rgba(255,255,255,.025);
+}
+.nhom-mo-ta-san-pham h4, .dau-nhom-thong-so h4 { margin: 0 0 14px; font-size: 16px; }
+.luoi-truong-mo-ta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.luoi-truong-mo-ta > div { min-width: 0; }
+.luoi-truong-mo-ta .truong-rong { grid-column: 1 / -1; }
+.luoi-truong-mo-ta label, .nhom-thong-so-san-pham > label { display: block; margin-bottom: 7px; color: #9ca3af; font-size: 13px; font-weight: 650; }
+.luoi-truong-mo-ta textarea, .nhom-thong-so-san-pham textarea { width: 100%; min-height: 78px; resize: vertical; }
+.dau-nhom-thong-so p { margin: -7px 0 14px; color: #8d96a6; font-size: 12px; }
+.goi-y-thong-so { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+.nut-goi-y-thong-so {
+    padding: 7px 10px;
+    border: 1px solid rgba(220, 38, 65, .28);
+    border-radius: 999px;
+    background: rgba(220, 38, 65, .07);
+    color: #e16a7e;
+    cursor: pointer;
+    font-size: 12px;
+}
+.nut-goi-y-thong-so:hover { background: rgba(220, 38, 65, .16); }
+.ghi-chu-thong-so { display: block; margin-top: 7px; color: #8d96a6; line-height: 1.5; }
+.phan-trang { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin: 24px 0 8px; }
+.phan-trang a, .phan-trang span { padding: 9px 14px; border: 1px solid rgba(148, 163, 184, .22); border-radius: 10px; }
+.phan-trang a { color: var(--brand-primary, #dc2641); font-weight: 700; text-decoration: none; }
+.phan-trang span { color: #8490a3; font-size: 13px; }
+.logo img, .sidebar-logo img { width: 40px; height: 40px; object-fit: contain; flex: 0 0 auto; }
+.logo { display: inline-flex; align-items: center; gap: 9px; }
+.logo span { display: grid; gap: 2px; line-height: 1.1; }
+.logo small { color: #9099aa; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.sidebar-logo { display: flex; align-items: center; gap: 9px; }
+@media (max-width: 760px) {
+    .luoi-thong-so-moi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .luoi-thong-tin-san-pham, .luoi-truong-mo-ta { grid-template-columns: 1fr; }
+    .luoi-truong-mo-ta .truong-rong { grid-column: auto; }
+}
+@media (max-width: 460px) {
+    .luoi-thong-so-moi { grid-template-columns: 1fr; }
+    .khung-thong-tin-san-pham { padding: 16px; }
+    .nhom-mo-ta-san-pham, .nhom-thong-so-san-pham { padding: 13px; }
+}

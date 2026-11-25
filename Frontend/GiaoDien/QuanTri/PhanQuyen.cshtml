@@ -1,0 +1,32 @@
+@model NguoiDung
+@{
+    ViewBag.Title = "Phân quyền";
+    var daCap = (string[])ViewBag.DaCap;
+    var nhomQuyen = QuyenHelper.TatCa.GroupBy(x => x.Nhom);
+}
+<div class="admin-panel">
+    <a href="/quan-tri/nguoi-dung" class="phu">← Quay lại</a>
+    <h3 style="margin-top:10px">Phân quyền: @Model.HoTen</h3>
+    <p class="phu">@Model.Email · Vai trò @VaiTro.Ten(Model.VaiTro)</p>
+</div>
+
+<form method="post">
+            @Html.AntiForgeryToken()
+    @foreach (var nhom in nhomQuyen)
+    {
+        <div class="admin-panel mt-4">
+            <h3>@nhom.Key</h3>
+            @foreach (var q in nhom)
+            {
+                <label class="hop-checkbox">
+                    <input type="checkbox" name="quyen" value="@q.Ma" checked="@daCap.Contains(q.Ma)" />
+                    <span>@q.Ten</span>
+                </label>
+            }
+        </div>
+    }
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:16px">
+        <button type="submit" name="datLai" value="true" class="nut-phu" formnovalidate>Về mặc định</button>
+        <button type="submit" class="btn-primary">Lưu phân quyền</button>
+    </div>
+</form>

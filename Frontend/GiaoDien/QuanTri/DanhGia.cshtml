@@ -1,0 +1,58 @@
+@using GIADUNGCHATLUONG.MoHinh
+@model List<DanhGia>
+@{
+    ViewBag.Title = "Duyệt đánh giá";
+    var trangThai = ViewBag.TrangThai as string ?? "cho-duyet";
+}
+<div class="admin-panel">
+    <div class="dau-phan" style="justify-content:space-between;align-items:center">
+        <div>
+            <h3>Đánh giá sản phẩm</h3>
+            <p class="phu">Có @ViewBag.SoChoDuyet đánh giá đang chờ duyệt.</p>
+        </div>
+        <form method="get" action="/quan-tri/danh-gia">
+            <select name="trangThai" onchange="this.form.submit()">
+                <option value="cho-duyet" selected="@(trangThai == "cho-duyet")">Chờ duyệt</option>
+                <option value="da-duyet" selected="@(trangThai == "da-duyet")">Đã duyệt</option>
+                <option value="tat-ca" selected="@(trangThai == "tat-ca")">Tất cả</option>
+            </select>
+        </form>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="trong-trong"><div class="bieu-tuong-trong">⭐</div><h3>Chưa có đánh giá</h3><p class="phu">Danh sách hiện chưa có mục nào.</p></div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table-glass mt-3">
+                <thead><tr><th>Sản phẩm</th><th>Khách hàng</th><th>Đánh giá</th><th>Ngày gửi</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+                <tbody>
+                @foreach (var dg in Model)
+                {
+                    <tr>
+                        <td><strong>@(dg.SanPham?.Ten ?? "Sản phẩm đã xóa")</strong></td>
+                        <td>@(dg.NguoiDung?.HoTen ?? "Tài khoản không còn")</td>
+                        <td><span class="sao">@for (var i = 0; i < Math.Clamp(dg.SoSao, 1, 5); i++) { <text>★</text> }</span><br /><strong>@dg.TieuDe</strong><br /><span class="phu">@dg.NoiDung</span></td>
+                        <td>@TienIch.NgayGio(dg.NgayTao)</td>
+                        <td>@if (dg.DaDuyet) { <span class="badge-success">Đã duyệt</span> } else { <span class="badge-warning">Chờ duyệt</span> }</td>
+                        <td>
+                            <div class="hang-thao-tac">
+                                <form method="post" action="/quan-tri/danh-gia/@dg.Id/duyet">
+            @Html.AntiForgeryToken()
+                                    <input type="hidden" name="duyet" value="@(!dg.DaDuyet ? "true" : "false")" />
+                                    <button type="submit" class="btn-primary">@(dg.DaDuyet ? "Ẩn" : "Duyệt")</button>
+                                </form>
+                                <form method="post" action="/quan-tri/danh-gia/@dg.Id/xoa" onsubmit="return confirm('Xóa đánh giá này?')">
+            @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-danger">Xóa</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

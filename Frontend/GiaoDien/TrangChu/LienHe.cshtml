@@ -1,0 +1,16 @@
+<div class="khung phan">
+    <div class="hop-lien-he">
+        <h1>Liên hệ & Phản hồi</h1>
+        <p class="phu">Gửi câu hỏi hoặc phản hồi, chúng tôi sẽ trả lời sớm nhất.</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="hang-2">
+                <div><label>Họ tên *</label><input name="hoTen" required maxlength="100" /></div>
+                <div><label>Email</label><input name="email" type="email" maxlength="150" /></div>
+            </div>
+            <label>Số điện thoại</label><input name="dienThoai" maxlength="20" />
+            <label>Nội dung *</label><textarea name="noiDung" rows="5" required maxlength="2000"></textarea>
+            <div class="hang-nut"><button type="submit" class="nut-chinh" data-nut-ripple>Gửi liên hệ</button></div>
+        </form>
+    </div>
+</div>

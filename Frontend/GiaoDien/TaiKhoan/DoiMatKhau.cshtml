@@ -1,0 +1,14 @@
+@{ ViewBag.Title = "Đổi mật khẩu"; }
+<div class="account-page account-password-page">
+    <div class="account-card">
+        <div class="account-card-head"><span class="account-symbol">🔐</span><span class="eyebrow">BẢO MẬT TÀI KHOẢN</span><h1>Đổi mật khẩu</h1><p>Đặt mật khẩu mới để bảo vệ tài khoản của anh.</p></div>
+        <form method="post" action="/tai-khoan/doi-mat-khau" class="account-form">
+            @Html.AntiForgeryToken()
+            <div><label for="matKhauHienTai">Mật khẩu hiện tại</label><input id="matKhauHienTai" type="password" name="matKhauHienTai" autocomplete="current-password" required /></div>
+            <div><label for="matKhauMoi">Mật khẩu mới</label><input id="matKhauMoi" type="password" name="matKhauMoi" minlength="8" autocomplete="new-password" required /><small>Tối thiểu 8 ký tự.</small></div>
+            <div><label for="xacNhanMatKhau">Nhập lại mật khẩu mới</label><input id="xacNhanMatKhau" type="password" name="xacNhanMatKhau" minlength="8" autocomplete="new-password" required /></div>
+            <button type="submit" class="btn-primary">Cập nhật mật khẩu</button>
+        </form>
+        <p class="account-back"><a href="/">← Trở về cửa hàng</a></p>
+    </div>
+</div>

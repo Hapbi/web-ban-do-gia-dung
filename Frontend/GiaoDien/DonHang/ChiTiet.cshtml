@@ -1,0 +1,81 @@
+@using GIADUNGCHATLUONG.MoHinh
+@model DonHang
+@{
+    var cauHinh = ViewBag.CauHinh as CauHinh;
+    var datHangThanhCong = (ViewBag.DatHangThanhCong as bool?) == true;
+}
+<div class="khung phan trang-chi-tiet-don">
+    <a href="/don-hang-cua-toi" class="nut-quay-lai">← Đơn hàng của tôi</a>
+
+    @if (datHangThanhCong)
+    {
+        <section class="thong-bao-dat-hang" role="status" aria-live="polite">
+            <div class="thanh-cong-icon">✓</div>
+            <div>
+                <h2>ĐẶT HÀNG THÀNH CÔNG!</h2>
+                <p>Hệ thống đã ghi nhận đơn <strong>#@Model.MaDon</strong>. Trạng thái hiện tại: <strong>@TrangThaiDon.Ten(Model.TrangThai)</strong>.</p>
+                <p class="ghi-chu-thu-nghiem">Đây là website thử nghiệm, chỉ mang tính chất minh họa. Đơn hàng và thanh toán không phát sinh giao dịch thật.</p>
+            </div>
+        </section>
+    }
+
+    <div class="dau-chi-tiet-don">
+        <div>
+            <h1>Đơn #@Model.MaDon</h1>
+            <p class="phu">@TienIch.NgayGio(Model.NgayTao)</p>
+        </div>
+        <span class="huy-hieu-trang-thai mau-@TrangThaiDon.Mau(Model.TrangThai)">@TrangThaiDon.Ten(Model.TrangThai)</span>
+    </div>
+
+    <div class="luoi-chi-tiet-don">
+        <div>
+            <h2>Sản phẩm</h2>
+            <div class="danh-sach-chi-tiet-don">
+                @foreach (var ct in Model.ChiTiet)
+                {
+                    <div class="dong-chi-tiet-don">
+                        <img src="@(string.IsNullOrWhiteSpace(ct.AnhSanPham) ? "/HinhAnh/anh-mac-dinh.svg" : ct.AnhSanPham)"
+                             alt="" onerror="this.onerror=null;this.src='/HinhAnh/anh-mac-dinh.svg'" />
+                        <div>
+                            <strong>@ct.TenSanPham</strong>
+                            <div class="phu">@ct.SoLuong × @TienIch.Tien(ct.DonGia)</div>
+                        </div>
+                        <strong>@TienIch.Tien(ct.ThanhTien)</strong>
+                    </div>
+                }
+            </div>
+
+            <h2>Giao đến</h2>
+            <div class="khung-dia-chi">
+                <strong>@Model.HoTen</strong><br />
+                @Model.DienThoai<br />
+                @Model.DiaChi
+                @if (!string.IsNullOrWhiteSpace(Model.GhiChu)) { <div class="phu">Ghi chú: @Model.GhiChu</div> }
+            </div>
+        </div>
+
+        <aside class="tom-tat-don">
+            <h2>Tổng kết</h2>
+            <div class="dong-tom-tat"><span>Tạm tính</span><strong>@TienIch.Tien(Model.TongTien)</strong></div>
+            <div class="dong-tom-tat"><span>Phí ship</span><strong>Miễn phí</strong></div>
+            <div class="dong-tom-tat tong"><span>Tổng</span><strong>@TienIch.Tien(Model.TongTien)</strong></div>
+            <div class="thong-tin-tt">
+                <p><strong>Thanh toán:</strong> @PhuongThucThanhToan.Ten(Model.PhuongThucThanhToan)</p>
+                <p><strong>Trạng thái:</strong> @ThanhToan.Ten(Model.ThanhToan)</p>
+            </div>
+            @if (Model.PhuongThucThanhToan == PhuongThucThanhToan.ChuyenKhoan && Model.ThanhToan == ThanhToan.ChuaThanhToan
+                 && cauHinh != null && !string.IsNullOrWhiteSpace(cauHinh.SoTaiKhoan))
+            {
+                <div class="khung-ngan-hang">
+                    <h3>🏦 Thông tin chuyển khoản mẫu</h3>
+                    <p class="canh-bao-khong-chuyen">Thông tin chỉ dùng minh họa giao diện. Không chuyển tiền thật.</p>
+                    <p><strong>Ngân hàng:</strong> @cauHinh.NganHang</p>
+                    <p><strong>Số TK:</strong> @cauHinh.SoTaiKhoan</p>
+                    <p><strong>Chủ TK:</strong> @cauHinh.ChuTaiKhoan</p>
+                    <p><strong>Số tiền:</strong> @TienIch.Tien(Model.TongTien)</p>
+                    <p><strong>Nội dung:</strong> @Model.MaDon</p>
+                </div>
+            }
+        </aside>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+@model List<NhatKyChiTiet>
+@{
+    ViewBag.Title = "Nhật ký chi tiết";
+    var trang = (int)(ViewBag.Trang ?? 1);
+    var tong = (int)(ViewBag.TongBanGhi ?? 0);
+    var soTrang = Math.Max(1, (int)Math.Ceiling(tong / 200d));
+}
+<div class="admin-panel log-page">
+    <div class="panel-header"><div><span class="eyebrow">TRUY VẾT KỸ THUẬT</span><h3>🔎 Nhật ký chi tiết</h3><p class="phu">Ghi từng request động để kiểm tra lỗi, đường dẫn và luồng xử lý. Không lưu nội dung mật khẩu, token hay dữ liệu thanh toán.</p></div><span class="log-count">@tong bản ghi</span></div>
+    <div class="log-tabs"><a href="/quan-tri/nhat-ky">📌 Nghiệp vụ</a><a href="/quan-tri/nhat-ky-theo-nguoi">👤 Theo từng người</a><a class="active" href="/quan-tri/nhat-ky-chi-tiet">🔎 Chi tiết</a></div>
+    <form method="get" class="hang-cot search-admin log-filter">
+        <input type="text" name="q" value="@ViewBag.Q" placeholder="Tìm người dùng, đường dẫn, mã truy vết..." />
+        <select name="phuongThuc" class="form-input"><option value="">GET và POST</option><option value="GET" selected="@(ViewBag.PhuongThuc as string == "GET")">GET – xem/truy cập</option><option value="POST" selected="@(ViewBag.PhuongThuc as string == "POST")">POST – gửi/thay đổi</option></select>
+        <button type="submit" class="btn-primary">Tìm kiếm</button><a href="/quan-tri/nhat-ky-chi-tiet" class="nut-phu">Xóa lọc</a>
+    </form>
+    <div class="table-responsive mt-3"><table class="table-glass log-table"><thead><tr><th>Thời gian</th><th>Người dùng</th><th>Request</th><th>Đường dẫn</th><th>Kết quả</th><th>IP / Trace ID</th></tr></thead><tbody>
+    @foreach (var nk in Model)
+    {
+        <tr><td class="log-time">@nk.ThoiGian.ToString("dd/MM/yyyy HH:mm:ss")</td><td><strong>@nk.NguoiDung</strong><small class="phu">@(nk.NguoiDungId.HasValue ? "ID #" + nk.NguoiDungId : "Khách") · @(string.IsNullOrWhiteSpace(nk.VaiTro) ? "Khách" : VaiTro.Ten(nk.VaiTro))</small></td><td><span class="method-pill @(nk.PhuongThuc == "POST" ? "method-post" : "method-get")">@nk.PhuongThuc</span><small class="phu">@nk.HanhDong</small></td><td class="log-path">@nk.DuongDan</td><td><span class="status-pill @(nk.MaTrangThai < 400 ? "status-on" : "status-warn")">@nk.MaTrangThai · @nk.KetQua</span></td><td><div>@nk.DiaChiIP</div><small class="phu">@nk.TraceId</small></td></tr>
+    }
+    @if (Model.Count == 0) { <tr><td colspan="6" class="empty-ranking">Chưa có request nào khớp bộ lọc.</td></tr> }
+    </tbody></table></div>
+    <div class="log-pagination"><span>Trang @trang / @soTrang · Hiển thị tối đa 200 request/trang</span><div>@if (trang > 1) { <a class="nut-phu" href="?q=@Uri.EscapeDataString(ViewBag.Q as string ?? "")&phuongThuc=@ViewBag.PhuongThuc&trang=@(trang - 1)">← Trước</a> } @if (trang < soTrang) { <a class="btn-primary" href="?q=@Uri.EscapeDataString(ViewBag.Q as string ?? "")&phuongThuc=@ViewBag.PhuongThuc&trang=@(trang + 1)">Sau →</a> }</div></div>
+</div>

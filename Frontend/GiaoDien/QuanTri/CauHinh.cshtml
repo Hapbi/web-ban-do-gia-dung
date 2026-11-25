@@ -1,0 +1,116 @@
+@model CauHinh
+@{
+    ViewBag.Title = "Trình thiết kế cửa hàng";
+    var thuTu = new[] { "hero", "banner", "danhmuc", "banchay", "moimua", "noibat", "xephang", "ket" };
+    var tenKhoi = new Dictionary<string, string> {
+        ["hero"] = "Ảnh bìa / khu vực giới thiệu", ["banner"] = "Banner ưu đãi", ["danhmuc"] = "Danh mục sản phẩm",
+        ["banchay"] = "Sản phẩm bán chạy", ["moimua"] = "Sản phẩm mới", ["noibat"] = "Sản phẩm nổi bật",
+        ["xephang"] = "Bảng xếp hạng khách hàng", ["ket"] = "Lời kêu gọi mua sắm"
+    };
+    List<string> thuTuHienTai;
+    try { thuTuHienTai = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.CauTrucTrangChu) ?? thuTu.ToList(); }
+    catch { thuTuHienTai = thuTu.ToList(); }
+    thuTuHienTai = thuTuHienTai.Where(thuTu.Contains).Distinct().ToList();
+    foreach (var ma in thuTu) if (!thuTuHienTai.Contains(ma)) thuTuHienTai.Add(ma);
+    List<string> khoiAn;
+    try { khoiAn = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.CacKhoiAn) ?? new(); }
+    catch { khoiAn = new(); }
+}
+<div class="admin-panel config-builder">
+    <div class="panel-header">
+        <div><span class="eyebrow">BỘ ĐIỀU KHIỂN GIAO DIỆN</span><h3>🎨 Trình thiết kế GIADUNGCHATLUONG</h3><p class="phu">Chỉnh thiết kế toàn trang và sắp xếp các khối trang chủ như đang bố trí slide PowerPoint. Có thể kéo thả, ẩn/hiện và xem trước trước khi lưu.</p></div>
+        <span class="role-pill">Chỉ Admin lớn</span>
+    </div>
+    <form method="post" class="config-form" id="formCauHinh">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="CauTrucTrangChu" id="CauTrucTrangChu" value="@Model.CauTrucTrangChu" />
+        <input type="hidden" name="CacKhoiAn" id="CacKhoiAn" value="@Model.CacKhoiAn" />
+
+        <section class="designer-section">
+            <div class="designer-heading"><span>01</span><div><h4>Thông tin cửa hàng</h4><p>Thông tin hiển thị ở đầu trang và chân trang.</p></div></div>
+            <div class="form-grid-admin">
+                <div><label>Tên cửa hàng</label><input name="TenShop" value="@Model.TenShop" required class="form-input" maxlength="100" /></div>
+                <div><label>Slogan</label><input name="Slogan" value="@Model.Slogan" class="form-input" maxlength="180" /></div>
+                <div class="span-all"><label>Địa chỉ</label><input name="DiaChi" value="@Model.DiaChi" class="form-input" maxlength="180" /></div>
+                <div><label>Điện thoại</label><input name="DienThoai" value="@Model.DienThoai" class="form-input" maxlength="30" /></div>
+                <div><label>Email</label><input type="email" name="Email" value="@Model.Email" class="form-input" maxlength="120" /></div>
+                <div><label>Giờ mở cửa</label><input name="GioMoCua" value="@Model.GioMoCua" class="form-input" maxlength="80" /></div>
+            </div>
+        </section>
+
+        <section class="designer-section">
+            <div class="designer-heading"><span>02</span><div><h4>Bảng màu và kiểu chữ</h4><p>Áp dụng đồng bộ cho cửa hàng, trang sản phẩm, giỏ hàng và khu vực quản trị.</p></div></div>
+            <div class="designer-grid">
+                <div class="designer-controls">
+                    <div class="theme-color-grid">
+                        <label class="color-setting"><span>Màu chủ đạo</span><input type="color" name="MauChuDao" value="@Model.MauChuDao" /><code>@Model.MauChuDao</code></label>
+                        <label class="color-setting"><span>Màu phụ</span><input type="color" name="MauPhu" value="@Model.MauPhu" /><code>@Model.MauPhu</code></label>
+                        <label class="color-setting"><span>Màu nền toàn trang</span><input type="color" name="MauNen" value="@Model.MauNen" /><code>@Model.MauNen</code></label>
+                        <label class="color-setting"><span>Màu chữ</span><input type="color" name="MauChu" value="@Model.MauChu" /><code>@Model.MauChu</code></label>
+                        <label class="color-setting"><span>Màu khung / thẻ</span><input type="color" name="MauThe" value="@Model.MauThe" /><code>@Model.MauThe</code></label>
+                    </div>
+                    <div class="form-grid-admin designer-selects">
+                        <div><label>Phông chữ</label><select name="KieuChu" class="form-input"><option value="system" selected="@(Model.KieuChu == "system")">Hệ thống – dễ đọc</option><option value="arial" selected="@(Model.KieuChu == "arial")">Arial – gọn gàng</option><option value="serif" selected="@(Model.KieuChu == "serif")">Georgia – thanh lịch</option><option value="rounded" selected="@(Model.KieuChu == "rounded")">Trebuchet – mềm mại</option></select></div>
+                        <div><label>Cỡ chữ</label><select name="CoChu" class="form-input"><option value="nho" selected="@(Model.CoChu == "nho")">Nhỏ</option><option value="binhthuong" selected="@(Model.CoChu == "binhthuong")">Tiêu chuẩn</option><option value="lon" selected="@(Model.CoChu == "lon")">Lớn, dễ đọc</option></select></div>
+                        <div><label>Độ rộng trang</label><select name="DoRongTrang" class="form-input"><option value="1100" selected="@(Model.DoRongTrang == 1100)">Hẹp – tập trung</option><option value="1240" selected="@(Model.DoRongTrang == 1240)">Vừa</option><option value="1400" selected="@(Model.DoRongTrang == 1400)">Rộng</option><option value="1600" selected="@(Model.DoRongTrang == 1600)">Toàn màn hình</option></select></div>
+                        <div><label>Nhịp bố cục</label><select name="KieuBoCuc" class="form-input"><option value="rong" selected="@(Model.KieuBoCuc != "gon")">Thoáng, rộng rãi</option><option value="gon" selected="@(Model.KieuBoCuc == "gon")">Gọn, tập trung</option></select></div>
+                        <div><label>Số cột sản phẩm</label><select name="SoCotSanPham" class="form-input"><option value="2" selected="@(Model.SoCotSanPham == 2)">2 cột</option><option value="3" selected="@(Model.SoCotSanPham == 3)">3 cột</option><option value="4" selected="@(Model.SoCotSanPham == 4)">4 cột</option><option value="5" selected="@(Model.SoCotSanPham == 5)">5 cột</option></select></div>
+                        <div><label>Kiểu khung</label><select name="KieuThe" class="form-input"><option value="vuong" selected="@(Model.KieuThe == "vuong")">Vuông, gọn</option><option value="mem" selected="@(Model.KieuThe == "mem")">Bo góc mềm</option><option value="tron" selected="@(Model.KieuThe == "tron")">Bo tròn lớn</option></select></div>
+                        <div><label>Đổ bóng</label><select name="KieuBong" class="form-input"><option value="tat" selected="@(Model.KieuBong == "tat")">Không đổ bóng</option><option value="nhe" selected="@(Model.KieuBong == "nhe")">Nhẹ</option><option value="vua" selected="@(Model.KieuBong == "vua")">Nổi bật</option></select></div>
+                    </div>
+                </div>
+                <div class="designer-preview-wrap">
+                    <div class="preview-label">XEM TRƯỚC THỜI GIAN THỰC</div>
+                    <div class="designer-preview" id="themePreview">
+                        <div class="preview-top"><b id="previewShopName">GIADUNGCHATLUONG</b><span>Trang chủ　 Sản phẩm　 Giỏ hàng</span></div>
+                        <div class="preview-hero"><small>KHÔNG GIAN SỐNG TIỆN NGHI</small><h3>Thiết kế cửa hàng của riêng bạn</h3><p>Thay màu, chữ, bố cục và khung ngay tại đây.</p><button type="button">Khám phá ngay</button></div>
+                        <div class="preview-cards"><article><i>✦</i><b>Sản phẩm nổi bật</b><span>Khung nội dung</span></article><article><i>▦</i><b>Danh mục</b><span>Thẻ sản phẩm</span></article></div>
+                    </div>
+                    <p class="designer-hint">Bản xem trước mô phỏng màu, chữ, độ rộng và số cột. Nhấn “Lưu cấu hình” để áp dụng lên toàn bộ website.</p>
+                    <p class="contrast-warning" id="themeContrastWarning" role="status" hidden></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="designer-section">
+            <div class="designer-heading"><span>03</span><div><h4>Sắp xếp trang chủ như PowerPoint</h4><p>Kéo khối để đổi vị trí, tắt dấu chọn để ẩn khối. Thứ tự này áp dụng cho trang chủ.</p></div></div>
+            <div class="slide-editor">
+                <div class="slide-list" id="danhSachKhoi">
+                    @foreach (var ma in thuTuHienTai)
+                    {
+                        <div class="slide-item" draggable="true" data-module="@ma">
+                            <span class="slide-grip" aria-hidden="true">⠿</span>
+                            <span class="slide-number">@(thuTuHienTai.IndexOf(ma) + 1)</span>
+                            <strong>@tenKhoi[ma]</strong>
+                            <label class="slide-visible"><input type="checkbox" checked="@(!khoiAn.Contains(ma))" /> Hiện</label>
+                            <button type="button" class="slide-up" title="Chuyển lên">↑</button>
+                            <button type="button" class="slide-down" title="Chuyển xuống">↓</button>
+                        </div>
+                    }
+                </div>
+                <div class="slide-preview">
+                    <div class="slide-preview-head"><span>⌂ TRANG CHỦ</span><span>Chế độ xem bố cục</span></div>
+                    <div id="xemTruocKhoi" class="slide-preview-stack"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="designer-section">
+            <div class="designer-heading"><span>04</span><div><h4>Quà tặng và thanh toán</h4><p>Cấu hình quà tặng trên bảng xếp hạng và thông tin thanh toán hiển thị cho khách.</p></div></div>
+            <div class="form-grid-admin">
+                <div><label>Quà hạng 1</label><input name="QuaHangNhat" value="@Model.QuaHangNhat" class="form-input" maxlength="120" /></div>
+                <div><label>Quà hạng 2</label><input name="QuaHangNhi" value="@Model.QuaHangNhi" class="form-input" maxlength="120" /></div>
+                <div><label>Quà hạng 3</label><input name="QuaHangBa" value="@Model.QuaHangBa" class="form-input" maxlength="120" /></div>
+                <div><label>Ngân hàng</label><input name="NganHang" value="@Model.NganHang" class="form-input" maxlength="100" /></div>
+                <div><label>Số tài khoản</label><input name="SoTaiKhoan" value="@Model.SoTaiKhoan" class="form-input" maxlength="50" /></div>
+                <div><label>Chủ tài khoản</label><input name="ChuTaiKhoan" value="@Model.ChuTaiKhoan" class="form-input" maxlength="100" /></div>
+                <div class="span-all"><label>Đường dẫn ảnh mã QR (nếu có)</label><input name="MaQr" value="@Model.MaQr" class="form-input" maxlength="500" placeholder="https://... hoặc /TaiLen/..." /></div>
+            </div>
+        </section>
+        <div class="designer-savebar"><div><strong>Đã sẵn sàng?</strong><small>Toàn bộ cấu hình sẽ được lưu trong database.</small></div><button type="submit" class="btn-primary">💾 Lưu và áp dụng toàn trang</button></div>
+    </form>
+</div>
+@section Scripts {
+    <script src="~/JS/trinh-soan-giao-dien.js" asp-append-version="true"></script>
+}

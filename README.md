@@ -113,4 +113,3 @@ GIADUNGCHATLUONG/
 | Khách hàng | `khach@shop.vn` | `Khach@123` |
 | Quản trị phụ | `adminphu@shop.vn` | `AdminPhu@123` |
 
-> ⚠️ Tài khoản chỉ dùng để chạy thử. Cần đổi mật khẩu trước khi triển khai thật.
